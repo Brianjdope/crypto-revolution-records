@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#0a0805" />
+    <title>OZ THE CRYPTO GOAT — Crypto Revolution Records</title>
+    <meta
+      name="description"
+      content="The first tokenized record label on the blockchain. AI creator music, NFTs, and the $OZ token. Founded by OZ The Crypto Goat."
+    />
+    <link rel="preconnect" href="https://api.coingecko.com" />
+    <link rel="stylesheet" href="./styles.css" />
+
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.161.0/build/three.module.js",
+          "three/addons/": "https://unpkg.com/three@0.161.0/examples/jsm/",
+          "three/examples/jsm/": "https://unpkg.com/three@0.161.0/examples/jsm/",
+          "lenis": "https://unpkg.com/lenis@1.1.13/dist/lenis.mjs",
+          "gsap": "https://unpkg.com/gsap@3.12.5/index.js",
+          "gsap/ScrollTrigger": "https://unpkg.com/gsap@3.12.5/ScrollTrigger.js"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <div id="loader" class="loader">
+      <div class="loader-mark">
+        <span>OZ</span>
+        <em>the crypto goat</em>
+      </div>
+      <div class="loader-bar"><span id="loader-fill"></span></div>
+      <div class="loader-status" id="loader-status">forging the gold goat…</div>
+    </div>
+
+    <canvas id="bg-canvas" aria-hidden="true"></canvas>
+
+    <header class="topbar">
+      <a class="brand" href="#hero" aria-label="OZ Crypto Revolution Records">
+        <svg viewBox="0 0 64 64" aria-hidden="true">
+          <defs>
+            <linearGradient id="goldgrad" x1="0" x2="1" y1="0" y2="1">
+              <stop offset="0" stop-color="#fff3b0" />
+              <stop offset=".5" stop-color="#d4af37" />
+              <stop offset="1" stop-color="#7a5a18" />
+            </linearGradient>
+          </defs>
+          <path
+            fill="url(#goldgrad)"
+            d="M32 4l6 8 10-2-2 10 8 6-8 6 2 10-10-2-6 8-6-8-10 2 2-10-8-6 8-6-2-10 10 2z"
+          />
+          <circle cx="32" cy="32" r="6" fill="#0a0805" />
+        </svg>
+        <span>CRYPTO REVOLUTION</span>
+      </a>
+      <nav class="nav" aria-label="Primary">
+        <a href="#mission">Manifesto</a>
+        <a href="#market">Market</a>
+        <a href="#token">$OZ</a>
+        <a href="#roster">Artists</a>
+        <a href="#play">Listen</a>
+        <a href="#roadmap">Roadmap</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+      <a class="cta-pill" href="#buy">Buy $OZ</a>
+    </header>
+
+    <main>
+      <!-- ACT 1 — HERO -->
+      <section id="hero" class="hero" data-scene="hero">
+        <div class="hero-copy">
+          <p class="eyebrow"><span class="dot"></span> Est. 2026 · First tokenized record label on-chain</p>
+          <h1>
+            <span class="line">OZ</span>
+            <span class="line gold">THE CRYPTO</span>
+            <span class="line">GOAT.</span>
+          </h1>
+          <p class="lede">
+            A new music label, built for the chain. AI-native artists. Smart-contract royalties.
+            One token, one herd — and a back catalogue you can actually own. Welcome to the
+            <em>Crypto Revolution</em>.
+          </p>
+          <div class="hero-actions">
+            <a href="#buy" class="btn btn-primary">Buy $OZ</a>
+            <a href="#play" class="btn btn-ghost">▶ Hear the label</a>
+          </div>
+          <div class="hero-stats">
+            <div><strong id="stat-cap">$—</strong><span>Token mcap</span></div>
+            <div><strong id="stat-holders">—</strong><span>Holders worldwide</span></div>
+            <div><strong id="stat-tracks">—</strong><span>Tracks on-chain</span></div>
+          </div>
+        </div>
+        <div class="scroll-hint" aria-hidden="true">scroll <span>↓</span></div>
+      </section>
+
+      <!-- PRESS STRIP -->
+      <section class="press" aria-label="Featured in">
+        <p class="press-label">As covered by</p>
+        <div class="press-strip" id="press-strip"></div>
+      </section>
+
+      <!-- ACT 2 — MISSION -->
+      <section id="mission" class="mission" data-scene="mission">
+        <p class="section-eyebrow">Manifesto</p>
+        <h2 class="reveal">
+          A label built for the artists,
+          <span class="gold">paid by the contract</span>, and
+          <span class="gold">owned by the herd.</span>
+        </h2>
+        <div class="mission-grid">
+          <article>
+            <span class="num">01</span>
+            <h3>AI-native artists</h3>
+            <p>Every release is co-created in our in-house AI studio and finished by a human ear. Sound that could only exist now.</p>
+          </article>
+          <article>
+            <span class="num">02</span>
+            <h3>Royalties on rails</h3>
+            <p>A single smart contract splits every stream and sale to artists, holders, and the treasury — the second the money clears.</p>
+          </article>
+          <article>
+            <span class="num">03</span>
+            <h3>One token, one herd</h3>
+            <p>$OZ unlocks pre-saves, drops, governance, and a permanent line into the studio. Hold it and you're on the masthead.</p>
+          </article>
+        </div>
+      </section>
+
+      <!-- ACT 3 — LIVE MARKET -->
+      <section id="market" class="market" data-scene="market">
+        <p class="section-eyebrow">Live market</p>
+        <h2>The market never sleeps. <span class="gold">Neither does the studio.</span></h2>
+        <p class="section-lede">Live prices, refreshed every minute via the public CoinGecko feed. The herd reads the tape together.</p>
+        <div class="ticker" id="ticker" aria-live="polite">
+          <div class="ticker-track" id="ticker-track">loading live prices…</div>
+        </div>
+        <div class="market-grid" id="market-grid"></div>
+      </section>
+
+      <!-- ACT 4 — TOKENOMICS -->
+      <section id="token" class="token" data-scene="token">
+        <p class="section-eyebrow">$OZ Tokenomics</p>
+        <div class="token-wrap">
+          <div class="token-chart">
+            <canvas id="token-canvas" width="520" height="520" aria-label="OZ token allocation chart"></canvas>
+            <div class="token-center">
+              <span>Total supply</span>
+              <strong>1,000,000,000</strong>
+              <em>$OZ</em>
+            </div>
+          </div>
+          <ul class="token-legend" id="token-legend"></ul>
+        </div>
+      </section>
+
+      <!-- ACT 5 — ARTIST ROSTER -->
+      <section id="roster" class="roster" data-scene="roster">
+        <p class="section-eyebrow">The Roster / NFT drops</p>
+        <h2>Signed to the blockchain.</h2>
+        <div class="roster-grid" id="roster-grid"></div>
+      </section>
+
+      <!-- ACT 6 — MUSIC PLAYER -->
+      <section id="play" class="play" data-scene="play">
+        <p class="section-eyebrow">Listen / Track previews</p>
+        <h2>Tap a track. <span class="gold">Feel the gold.</span></h2>
+        <div class="player">
+          <div class="player-stage">
+            <canvas id="viz-canvas" aria-hidden="true"></canvas>
+            <div class="now-playing">
+              <span class="np-label">Now playing</span>
+              <strong id="np-title">— select a track —</strong>
+              <em id="np-artist">Crypto Revolution Records</em>
+            </div>
+            <button class="play-btn" id="play-btn" aria-label="Play / pause">
+              <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
+            </button>
+          </div>
+          <ol class="tracklist" id="tracklist"></ol>
+        </div>
+      </section>
+
+      <!-- ACT 7 — ROADMAP -->
+      <section id="roadmap" class="roadmap" data-scene="roadmap">
+        <p class="section-eyebrow">Roadmap / The path of the goat</p>
+        <ol class="timeline" id="timeline"></ol>
+      </section>
+
+      <!-- ACT 8 — BUY -->
+      <section id="buy" class="buy" data-scene="buy">
+        <p class="section-eyebrow">Buy $OZ / Join the herd</p>
+        <h2>Claim your <span class="gold">piece of the revolution.</span></h2>
+
+        <div class="buy-grid">
+          <div class="buy-card" id="buy-wallet">
+            <header>
+              <h3>Connect wallet</h3>
+              <span class="chip">Web3</span>
+            </header>
+            <p>MetaMask, Phantom, WalletConnect. Pay in ETH, SOL, or USDC.</p>
+            <div class="amount">
+              <label for="amt-crypto">Amount ($OZ)</label>
+              <input id="amt-crypto" type="number" min="100" step="100" value="10000" />
+              <span class="quote" id="quote-crypto">≈ — ETH</span>
+            </div>
+            <button class="btn btn-primary" id="connect-wallet">Connect wallet</button>
+            <small id="wallet-status" class="status"></small>
+          </div>
+
+          <div class="buy-card" id="buy-card">
+            <header>
+              <h3>Pay with card</h3>
+              <span class="chip">Stripe · Apple Pay</span>
+            </header>
+            <p>Credit, debit, or one-tap with Apple Pay. Tokens delivered to your wallet.</p>
+            <div class="amount">
+              <label for="amt-fiat">Amount (USD)</label>
+              <input id="amt-fiat" type="number" min="10" step="10" value="250" />
+              <span class="quote" id="quote-fiat">= — $OZ</span>
+            </div>
+            <div class="pay-row">
+              <button class="btn btn-primary" id="pay-card">Pay with card</button>
+              <button class="btn btn-apple" id="pay-apple" aria-label="Pay with Apple Pay">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path
+                    d="M16.5 3c-.1 1-.5 2-1.2 2.7-.7.8-1.8 1.4-2.8 1.3-.1-1 .4-2 1.1-2.7.7-.8 1.9-1.3 2.9-1.3zM20 17.3c-.5 1-.7 1.5-1.3 2.4-.9 1.3-2.1 2.9-3.6 2.9-1.4 0-1.7-.9-3.6-.9-1.8 0-2.2.9-3.5.9-1.6 0-2.7-1.5-3.6-2.8C2.6 17 2.3 12.4 4 10c1-1.3 2.4-2.1 3.8-2.1 1.4 0 2.2.8 3.4.8 1.1 0 1.8-.8 3.4-.8 1.3 0 2.6.7 3.5 1.9-3.1 1.7-2.6 6 .9 7.5z"
+                  />
+                </svg>
+                 Pay
+              </button>
+            </div>
+            <small id="card-status" class="status"></small>
+          </div>
+        </div>
+
+        <p class="legal">
+          Demo experience. No live transactions. $OZ is a utility token; consult counsel in your
+          jurisdiction before participating in any token offering. Crypto Revolution Records, Inc.
+          does not provide investment advice.
+        </p>
+      </section>
+
+      <!-- ACT 9 — FAQ -->
+      <section id="faq" class="faq" data-scene="faq">
+        <p class="section-eyebrow">FAQ / Read the contract</p>
+        <h2>Questions the herd asks first.</h2>
+        <ol class="faq-list" id="faq-list"></ol>
+      </section>
+
+      <!-- ACT 10 — NEWSLETTER -->
+      <section id="join" class="join" data-scene="join">
+        <div class="join-card">
+          <p class="section-eyebrow">Join the herd</p>
+          <h2 class="join-title">Drops, demos, and dividends — straight to your inbox.</h2>
+          <p class="join-lede">No spam. One email per drop. Holders get the early pre-save link.</p>
+          <form class="newsletter" id="newsletter-form" novalidate>
+            <input type="email" inputmode="email" autocomplete="email" placeholder="you@cryptorevolution.fm" required />
+            <button type="submit" class="btn btn-primary">Subscribe</button>
+            <small class="nl-status" aria-live="polite"></small>
+          </form>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <div class="footer-top">
+          <div class="footer-brand">
+            <strong>CRYPTO REVOLUTION RECORDS</strong>
+            <span>An AI-native music label. Founded by OZ The Crypto Goat. ©2026</span>
+          </div>
+          <nav class="footer-links" aria-label="Footer">
+            <a href="#mission">Manifesto</a>
+            <a href="#token">$OZ</a>
+            <a href="#roster">Artists</a>
+            <a href="#play">Listen</a>
+            <a href="#roadmap">Roadmap</a>
+            <a href="#faq">FAQ</a>
+            <a href="#buy">Buy</a>
+          </nav>
+          <div class="socials" id="socials" aria-label="Follow us"></div>
+        </div>
+        <div class="footer-bottom">
+          <span>Crypto Revolution Records, Inc. · Wyoming, USA</span>
+          <span class="legal-links">
+            <a href="#">Terms</a> · <a href="#">Privacy</a> · <a href="#">Token Disclosure</a>
+          </span>
+        </div>
+      </footer>
+    </main>
+
+    <script type="module" src="./src/main.js"></script>
+  </body>
+</html>

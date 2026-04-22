@@ -1,0 +1,11 @@
+.DS_Store
+node_modules/
+.claude/settings.local.json
+.idea/
+.vscode/
+*.log
+.env
+.env.*
+.cache/
+dist/
+.parcel-cache/
