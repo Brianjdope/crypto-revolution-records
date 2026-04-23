@@ -1,0 +1,31 @@
+# Render Blueprint
+# https://render.com/docs/blueprint-spec
+#
+# Deploy this repo by going to https://dashboard.render.com/blueprints
+# → New Blueprint Instance → select this repo → Render reads this file
+# and provisions the service automatically.
+#
+# After provisioning, open the service → Environment → fill in:
+#   STRIPE_PUBLISHABLE_KEY   (pk_live_... or pk_test_...)
+#   STRIPE_SECRET_KEY        (sk_live_... or sk_test_...)
+#   STRIPE_WEBHOOK_SECRET    (whsec_...  — optional, set after you add the webhook endpoint in Stripe)
+services:
+  - type: web
+    name: crypto-revolution-records
+    runtime: node
+    plan: free
+    region: oregon
+    branch: main
+    autoDeploy: true
+    buildCommand: npm install
+    startCommand: node dev-server.mjs
+    healthCheckPath: /api/config
+    envVars:
+      - key: NODE_VERSION
+        value: 20
+      - key: STRIPE_PUBLISHABLE_KEY
+        sync: false
+      - key: STRIPE_SECRET_KEY
+        sync: false
+      - key: STRIPE_WEBHOOK_SECRET
+        sync: false
