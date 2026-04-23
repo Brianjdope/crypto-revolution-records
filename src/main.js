@@ -156,59 +156,17 @@ function initPager() {
   renderDots();
   document.getElementById("pager-prev")?.addEventListener("click", () => setActive(activePanel - 1));
   document.getElementById("pager-next")?.addEventListener("click", () => setActive(activePanel + 1));
+  // Page advance is SPACE-ONLY (à la because-recollection.com).
+  // Everything else — wheel, trackpad, arrow keys, touch — scrolls the
+  // active panel normally. Click the dots or arrows to jump explicitly.
   window.addEventListener("keydown", (e) => {
     if (e.target?.closest?.("input, textarea")) return;
     const k = e.key;
-    if (k === " " || k === "Spacebar" || k === "ArrowRight" || k === "ArrowDown" || k === "PageDown" || k === "Enter") {
+    if (k === " " || k === "Spacebar") {
       e.preventDefault();
       setActive(activePanel + (e.shiftKey ? -1 : 1));
-    } else if (k === "ArrowLeft" || k === "ArrowUp" || k === "PageUp" || k === "Backspace") {
-      e.preventDefault();
-      setActive(activePanel - 1);
-    } else if (k === "Home") setActive(0);
-    else if (k === "End") setActive(PANELS.length - 1);
+    }
   });
-
-  // Wheel / trackpad — advance one panel per gesture, with a cooldown so
-  // a single flick doesn't blow through three sections.
-  let wheelCooldown = 0;
-  let wheelAcc = 0;
-  window.addEventListener("wheel", (e) => {
-    const active = document.querySelector("main > section.is-active, main > footer.is-active");
-    if (active) {
-      const atTop = active.scrollTop <= 0;
-      const atBottom = active.scrollTop + active.clientHeight >= active.scrollHeight - 2;
-      // let the panel scroll internally when its content overflows
-      if (e.deltaY > 0 && !atBottom) return;
-      if (e.deltaY < 0 && !atTop) return;
-    }
-    const now = performance.now();
-    if (now < wheelCooldown) return;
-    wheelAcc += e.deltaY;
-    if (Math.abs(wheelAcc) < 40) return;
-    if (wheelAcc > 0) setActive(activePanel + 1);
-    else setActive(activePanel - 1);
-    wheelAcc = 0;
-    wheelCooldown = now + 650;
-  }, { passive: true });
-
-  // Touch swipe — vertical swipe advances panels
-  let touchStartY = null;
-  window.addEventListener("touchstart", (e) => {
-    touchStartY = e.touches[0].clientY;
-  }, { passive: true });
-  window.addEventListener("touchend", (e) => {
-    if (touchStartY == null) return;
-    const dy = (e.changedTouches[0].clientY ?? touchStartY) - touchStartY;
-    touchStartY = null;
-    if (Math.abs(dy) < 60) return;
-    const active = document.querySelector("main > section.is-active, main > footer.is-active");
-    if (active) {
-      if (dy < 0 && active.scrollTop + active.clientHeight < active.scrollHeight - 2) return;
-      if (dy > 0 && active.scrollTop > 2) return;
-    }
-    setActive(activePanel + (dy < 0 ? 1 : -1));
-  }, { passive: true });
   window.addEventListener("hashchange", () => {
     const id = location.hash.slice(1);
     if (id) goToPanel(id);
