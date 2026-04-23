@@ -1,18 +1,21 @@
 // ============================================================
 // Main orchestrator + section pager.
 //
-// Sections are full-viewport panels. Advance ONLY on:
-//   • Spacebar        → next   (Shift+Space → previous)
-//   • Trackpad swipe  → down = next, up = previous (one per gesture)
-// Arrow keys, regular mouse wheel, and clicking links also navigate
-// for accessibility; the wheel gets the same cooldown treatment.
+// Sections are full-viewport panels. Inside a panel, the trackpad /
+// wheel scrolls normally so users can READ overflowing content.
+// Panel advance rules:
+//   • Spacebar     → next  (Shift+Space → previous)
+//   • Arrow/PgUp/  → same as space
+//   • Overscroll   → a firm extra trackpad gesture past the top or
+//                    bottom edge advances (with a cooldown)
+// Regular scrolling inside a panel never advances — only overscroll
+// at the panel edge does.
 // ============================================================
 import { CryptoScene } from "./scene.js";
 import { initCryptoTicker } from "./crypto.js";
 import { initTokenomics } from "./tokenomics.js";
 import { initRoster } from "./roster.js";
 import { initMusicPlayer } from "./music.js";
-import { initRoadmap } from "./roadmap.js";
 import { initBuy } from "./buy.js";
 import { initExtras } from "./extras.js";
 
@@ -141,26 +144,41 @@ window.addEventListener("keydown", (e) => {
   if (k === "End")  { e.preventDefault(); setActive(total - 1); return; }
 });
 
-// Two-finger trackpad / mouse wheel — one advance per gesture, cooldown-gated.
+// Trackpad / wheel — scrolls the active panel internally. Only when
+// the user keeps pushing past the top/bottom edge (overscroll) does
+// it advance. Cooldown prevents a single flick from skipping panels.
 let wheelCooldown = 0;
-let wheelAcc = 0;
+let overscrollAcc = 0;
 window.addEventListener(
   "wheel",
   (e) => {
     if (inEditable(e.target)) return;
+    const active = panels[activeIdx];
+    if (!active) return;
+    const atTop    = active.scrollTop <= 0;
+    const atBottom = active.scrollTop + active.clientHeight >= active.scrollHeight - 1;
+    const goingDown = e.deltaY > 0;
+    const goingUp   = e.deltaY < 0;
+
+    // Plenty of room to scroll inside the panel → let the browser handle it.
+    if (goingDown && !atBottom) { overscrollAcc = 0; return; }
+    if (goingUp   && !atTop)    { overscrollAcc = 0; return; }
+
+    // At an edge — accumulate overscroll until it's firm enough to advance.
     const now = performance.now();
     if (now < wheelCooldown) return;
-    wheelAcc += e.deltaY;
-    if (Math.abs(wheelAcc) < 40) return;
-    if (wheelAcc > 0) setActive(activeIdx + 1);
-    else setActive(activeIdx - 1);
-    wheelAcc = 0;
-    wheelCooldown = now + 650;
+    overscrollAcc += e.deltaY;
+    if (Math.abs(overscrollAcc) < 120) return; // firmer threshold than before
+
+    if (overscrollAcc > 0) setActive(activeIdx + 1);
+    else                   setActive(activeIdx - 1);
+    overscrollAcc = 0;
+    wheelCooldown = now + 700;
   },
   { passive: true }
 );
 
-// Touch swipe — one advance per swipe.
+// Touch swipe — only when at the panel edge, to mirror wheel behavior.
 let touchStartY = null;
 window.addEventListener("touchstart", (e) => {
   touchStartY = e.touches[0].clientY;
@@ -169,7 +187,13 @@ window.addEventListener("touchend", (e) => {
   if (touchStartY == null) return;
   const dy = (e.changedTouches[0].clientY ?? touchStartY) - touchStartY;
   touchStartY = null;
-  if (Math.abs(dy) < 60) return;
+  if (Math.abs(dy) < 80) return;
+  const active = panels[activeIdx];
+  if (!active) return;
+  const atTop    = active.scrollTop <= 0;
+  const atBottom = active.scrollTop + active.clientHeight >= active.scrollHeight - 1;
+  if (dy < 0 && !atBottom) return; // still room to scroll down inside panel
+  if (dy > 0 && !atTop)    return; // still room to scroll up inside panel
   setActive(activeIdx + (dy < 0 ? 1 : -1));
 }, { passive: true });
 
@@ -197,7 +221,6 @@ window.addEventListener("hashchange", () => {
 // ---------- Boot the sections ----------
 initRoster();
 initMusicPlayer();
-initRoadmap();
 initTokenomics();
 initBuy();
 initExtras();
