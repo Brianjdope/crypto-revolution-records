@@ -5,19 +5,23 @@
 const FAQS = [
   {
     q: "What is Crypto Revolution Records?",
-    a: "An AI-native music label co-founded by OZ The Crypto Goat. Every release is minted on-chain, every royalty is split by smart contract, and every fan can hold a piece of the label through the $OZ token.",
+    a: "An AI-native music label co-founded by OZ The Crypto Goat. Every release is minted on-chain, every royalty is split by smart contract, and every fan can hold a piece of the label through the $CR token.",
   },
   {
-    q: "Is $OZ a security?",
-    a: "$OZ is a utility token granting access to drops, governance, and creator royalties. We are not making investment claims and recommend you consult counsel in your jurisdiction before participating.",
+    q: "Is $CR a security?",
+    a: "$CR is a utility token granting access to drops, governance, and creator royalties. We are not making investment claims and recommend you consult counsel in your jurisdiction before participating.",
   },
   {
     q: "How are artists paid?",
-    a: "On-chain. Streams, sales, and licensing fees route through a royalty contract that splits revenue to the artist, the label, and $OZ holders the moment they settle.",
+    a: "On-chain. Streams, sales, and licensing fees route through a royalty contract that splits revenue to the artist, the label, and $CR holders the moment they settle.",
   },
   {
-    q: "Do I need a wallet to buy?",
-    a: "No. You can pay with credit card or Apple Pay through our fiat onramp — your tokens land in a custodial wallet you control. Bring your own wallet to claim them at any time.",
+    q: "Do I need a crypto wallet to buy $CR?",
+    a: "No — and that's the whole point of the easy path. Enter your email, pay with Apple Pay or your card, and we create a CR account for you that holds the tokens. Your account is identified by your email, secured by a magic-link login, and the tokens live in a regulated custodial wallet on your behalf. When you're ready, you can withdraw to MetaMask, Phantom, Coinbase, or any wallet — anytime, no fees on your first transfer.",
+  },
+  {
+    q: "What happens if I lose my password?",
+    a: "There's no password to lose. The easy path uses passwordless magic-link login: we email you a one-tap sign-in link. If you ever lose access to that email, our support team can verify ownership through the card you bought with — the same way every modern fintech handles account recovery.",
   },
   {
     q: "Where is the label based?",
@@ -40,6 +44,7 @@ const SOCIALS = [
   { label: "TikTok",      href: "#", svg: '<path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-5.2 1.74 2.89 2.89 0 012.31-4.64 2.93 2.93 0 01.88.13V9.4a6.84 6.84 0 00-1-.05A6.33 6.33 0 005.8 20.1a6.34 6.34 0 0010.86-4.43V8.62a8.16 8.16 0 004.77 1.52V6.69h-1.84z"/>' },
   { label: "YouTube",     href: "#", svg: '<path d="M21.6 7.2a2.5 2.5 0 00-1.76-1.77C18.27 5 12 5 12 5s-6.27 0-7.84.43A2.5 2.5 0 002.4 7.2C2 8.77 2 12 2 12s0 3.23.4 4.8a2.5 2.5 0 001.76 1.77C5.73 19 12 19 12 19s6.27 0 7.84-.43a2.5 2.5 0 001.76-1.77C22 15.23 22 12 22 12s0-3.23-.4-4.8zM10 15V9l5.2 3-5.2 3z"/>' },
   { label: "Discord",     href: "#", svg: '<path d="M20.32 4.37A19.79 19.79 0 0016.43 3a14.9 14.9 0 00-.76 1.55 18.27 18.27 0 00-5.34 0A14.9 14.9 0 009.57 3a19.79 19.79 0 00-3.89 1.37C2.36 9.04 1.55 13.6 1.96 18.09a19.93 19.93 0 006.05 3.06 14.61 14.61 0 001.3-2.11 12.86 12.86 0 01-2.05-.99c.17-.13.34-.26.5-.4a14.21 14.21 0 0012.48 0c.16.14.33.27.5.4a12.85 12.85 0 01-2.05.99 14.6 14.6 0 001.3 2.11 19.93 19.93 0 006.05-3.06c.5-5.18-.83-9.71-3.72-13.72zM8.74 15.32c-1.18 0-2.15-1.09-2.15-2.42s.96-2.42 2.15-2.42c1.18 0 2.15 1.09 2.15 2.42s-.97 2.42-2.15 2.42zm6.52 0c-1.18 0-2.15-1.09-2.15-2.42s.97-2.42 2.15-2.42 2.15 1.09 2.15 2.42-.97 2.42-2.15 2.42z"/>' },
+  { label: "Soulflare",   href: "https://soulflare.com", svg: '<path d="M12 2.2c-3.1 4.2-4.9 7.2-4.9 10.2 0 3.8 2.2 6.5 4.9 7.6 2.7-1.1 4.9-3.8 4.9-7.6 0-3-1.8-6-4.9-10.2zM12 6.6c1.6 2.4 2.6 4.4 2.6 6 0 1.9-1.1 3.3-2.6 3.9-1.5-.6-2.6-2-2.6-3.9 0-1.6 1-3.6 2.6-6zM5 18c.7 1.3 1.9 2.3 3.5 2.9A6.5 6.5 0 0112 22a6.5 6.5 0 013.5-1.1c1.6-.6 2.8-1.6 3.5-2.9-1.2.6-2.4 1-3.6 1.2-1.2.2-2.2.2-3.4 0-1.2-.2-2.4-.6-3.6-1.2-.1 0-.2 0-.4 0z"/>' },
 ];
 
 export function initExtras() {

@@ -5,7 +5,7 @@ const PHASES = [
   {
     when: "Q1 2026",
     title: "The Genesis Drop",
-    body: "$OZ token launch, founding artist roster signed, first 10 NFTs minted on the Crypto Revolution contract.",
+    body: "$CR token launch, founding artist roster signed, first 10 NFTs minted on the Crypto Revolution contract.",
     tag: "Live",
     state: "now",
   },
@@ -19,7 +19,7 @@ const PHASES = [
   {
     when: "Q3 2026",
     title: "AI Studio public access",
-    body: "Open the AI co-creation studio to all $OZ holders. Mint your own track from a vault of OZ-trained models.",
+    body: "Open the AI co-creation studio to all $CR holders. Mint your own track from a vault of OZ-trained models.",
     tag: "Planned",
     state: "later",
   },

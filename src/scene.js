@@ -23,7 +23,7 @@ export class CryptoScene {
     this._initScene();
     this._initEnvironment();
     this._initLights();
-    this._buildGoat();
+    this._buildFlag();
     this._buildParticles();
     this._buildRings();
     this._buildGrid();
@@ -105,9 +105,76 @@ export class CryptoScene {
   }
 
   // -----------------------------------------------------------
-  // The goat — procedurally assembled out of primitives. Stylized
-  // (luxury trophy / sculpture look) — smooth metal, swept horns.
+  // The CR Revolution flag — a waving plane textured with
+  // /assets/flag-cr.svg. Replaces the earlier hero object; the
+  // rest of the animate loop still drives `this.goat` as a group.
   // -----------------------------------------------------------
+  _buildFlag() {
+    this.goat = new THREE.Group();
+
+    // Primary texture: the exact image the user supplied (save it at
+    // /assets/bg-flag.png). Falls back to the SVG so the site never ships
+    // blank if the PNG is missing.
+    const loader = new THREE.TextureLoader();
+    const tex = loader.load(
+      "./assets/bg-flag.png",
+      undefined,
+      undefined,
+      () => {
+        const fallback = loader.load("./assets/flag-cr.svg");
+        fallback.colorSpace = THREE.SRGBColorSpace;
+        fallback.anisotropy = 8;
+        this.flag.material.map = fallback;
+        this.flag.material.needsUpdate = true;
+      }
+    );
+    tex.colorSpace = THREE.SRGBColorSpace;
+    tex.anisotropy = 8;
+
+    const W = 5.4;
+    const H = W * (640 / 1024);
+    const geo = new THREE.PlaneGeometry(W, H, 64, 36);
+    // stash original positions so the shader-less wave keeps flat baseline
+    const basePos = geo.attributes.position.array.slice();
+    geo.userData.basePos = basePos;
+
+    const mat = new THREE.MeshStandardMaterial({
+      map: tex,
+      side: THREE.DoubleSide,
+      metalness: 0.15,
+      roughness: 0.7,
+      envMapIntensity: 0.6,
+    });
+    const flag = new THREE.Mesh(geo, mat);
+    flag.position.set(0, 0.1, 0);
+    this.flag = flag;
+    this.goat.add(flag);
+
+    // a thin pole running down the left edge
+    const poleMat = new THREE.MeshStandardMaterial({
+      color: 0x2b1c08,
+      metalness: 0.8,
+      roughness: 0.35,
+    });
+    const pole = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.04, 0.04, H + 0.9, 16),
+      poleMat
+    );
+    pole.position.set(-W / 2 - 0.02, 0.1, 0);
+    this.goat.add(pole);
+
+    const finial = new THREE.Mesh(
+      new THREE.SphereGeometry(0.09, 20, 16),
+      new THREE.MeshStandardMaterial({ color: 0xd4af37, metalness: 1, roughness: 0.25 })
+    );
+    finial.position.set(-W / 2 - 0.02, 0.1 + H / 2 + 0.48, 0);
+    this.goat.add(finial);
+
+    this.goat.position.set(0.15, -0.1, 0);
+    this.goat.rotation.y = -0.25;
+    this.scene.add(this.goat);
+  }
+
   _buildGoat() {
     this.goat = new THREE.Group();
 
@@ -263,7 +330,7 @@ export class CryptoScene {
     this.goat.add(tail);
 
     // -----------------------------------------------------------
-    // The $OZ medallion — bezeled disc with raised "OZ" face.
+    // The $CR medallion — bezeled disc with raised "CR" face.
     // -----------------------------------------------------------
     const pendant = new THREE.Group();
 
@@ -437,17 +504,35 @@ export class CryptoScene {
     this.shimmer.position.z = Math.sin(t * 0.7) * 3 + 1;
     this.shimmer.position.y = 1.5 + Math.sin(t * 1.3) * 0.4;
 
-    // goat: idle breathing + scroll-driven camera arcs
+    // flag: idle drift + scroll-driven tilt
     if (this.goat) {
-      this.goat.position.y = -0.2 + Math.sin(t * 0.8) * 0.06;
-      // mouse parallax tilt
-      const yawTarget = -0.5 + this.mouse.x * 0.4 + this.scrollT * Math.PI * 1.4;
-      const pitchTarget = this.mouse.y * 0.18 + Math.sin(t * 0.4) * 0.04;
+      this.goat.position.y = -0.1 + Math.sin(t * 0.8) * 0.05;
+      const yawTarget = -0.25 + this.mouse.x * 0.35 + this.scrollT * Math.PI * 0.8;
+      const pitchTarget = this.mouse.y * 0.15 + Math.sin(t * 0.4) * 0.03;
       this.goat.rotation.y += (yawTarget - this.goat.rotation.y) * 0.04;
       this.goat.rotation.x += (pitchTarget - this.goat.rotation.x) * 0.04;
+    }
 
-      // pendant spin
-      if (this.pendant) this.pendant.rotation.y += dt * 1.1;
+    // waving flag cloth simulation
+    if (this.flag) {
+      const geo = this.flag.geometry;
+      const pos = geo.attributes.position;
+      const base = geo.userData.basePos;
+      const halfW = (geo.parameters?.width || 4.8) / 2;
+      for (let i = 0; i < pos.count; i++) {
+        const ix = i * 3;
+        const x = base[ix];
+        const y = base[ix + 1];
+        // anchor strength: 0 at left pole, 1 at free edge
+        const anchor = (x + halfW) / (halfW * 2);
+        const wave =
+          Math.sin(x * 1.8 - t * 2.6) * 0.09 +
+          Math.sin(y * 2.2 + t * 1.7) * 0.04 +
+          Math.sin(x * 3.2 + y * 1.1 + t * 3.1) * 0.03;
+        pos.array[ix + 2] = wave * anchor;
+      }
+      pos.needsUpdate = true;
+      geo.computeVertexNormals();
     }
 
     // rings counter-rotate

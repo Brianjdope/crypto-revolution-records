@@ -1,5 +1,5 @@
 // ============================================================
-// $OZ tokenomics — donut chart drawn with Canvas 2D so we don't
+// $CR tokenomics — donut chart drawn with Canvas 2D so we don't
 // pull in another dep. Animates on first reveal.
 // ============================================================
 const SLICES = [

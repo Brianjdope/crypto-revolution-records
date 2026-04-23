@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  CR Revolution flag — Gadsden-style
+  Yellow field, ornate gold medallion, "CR" emblem,
+  coiled rattlesnake, grass tuft.
+  Used as the texture on the waving Three.js flag plane.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 640" width="1024" height="640">
+  <defs>
+    <linearGradient id="bg" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0" stop-color="#f1bb2c"/>
+      <stop offset="1" stop-color="#d39811"/>
+    </linearGradient>
+    <linearGradient id="goldFace" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0" stop-color="#fff3b0"/>
+      <stop offset=".5" stop-color="#d4af37"/>
+      <stop offset="1" stop-color="#7a5a18"/>
+    </linearGradient>
+    <radialGradient id="medGlow" cx=".5" cy=".5" r=".5">
+      <stop offset="0" stop-color="#fff7c2" stop-opacity=".55"/>
+      <stop offset="1" stop-color="#fff7c2" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="snakeSkin" x="0" y="0" width="14" height="14" patternUnits="userSpaceOnUse">
+      <rect width="14" height="14" fill="#cd9a3a"/>
+      <path d="M0 7 L7 0 L14 7 L7 14 Z" fill="#7a5a18" opacity=".55"/>
+      <circle cx="7" cy="7" r="1.4" fill="#3a2a08"/>
+    </pattern>
+    <filter id="soft" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="0.6"/>
+    </filter>
+  </defs>
+
+  <!-- yellow field -->
+  <rect width="1024" height="640" fill="url(#bg)"/>
+
+  <!-- subtle vignette -->
+  <radialGradient id="vig" cx=".5" cy=".5" r=".75">
+    <stop offset=".55" stop-color="#000" stop-opacity="0"/>
+    <stop offset="1" stop-color="#000" stop-opacity=".35"/>
+  </radialGradient>
+  <rect width="1024" height="640" fill="url(#vig)"/>
+
+  <!-- grass tuft beneath -->
+  <g transform="translate(512 540)">
+    <path d="M-130 8 q-14 -42 -28 -8 q-22 -54 -38 0 q-18 -38 -32 4 q-22 -50 -36 6 q-22 -42 -36 6 q-14 -34 -22 4 z"
+          fill="#2e6f2c" stroke="#0e3a16" stroke-width="2"/>
+    <path d="M-30 10 q-12 -36 -22 -2 q-18 -42 -30 4 q-12 -28 -22 6 q-16 -36 -28 4 z"
+          transform="scale(-1 1)" fill="#2e6f2c" stroke="#0e3a16" stroke-width="2"/>
+    <path d="M-160 14 h320 q-18 8 -36 6 q-30 -4 -52 6 q-30 -4 -56 4 q-32 -4 -54 4 q-30 -2 -56 -4 q-32 4 -66 -16 z"
+          fill="#1d4a16" opacity=".4"/>
+  </g>
+
+  <!-- glow behind medallion -->
+  <circle cx="512" cy="320" r="260" fill="url(#medGlow)"/>
+
+  <!-- ===== Medallion (ornate gold disc) ===== -->
+  <g transform="translate(512 320)">
+    <!-- outer rim with petals -->
+    <g>
+      <circle r="200" fill="url(#goldFace)" stroke="#5b4310" stroke-width="6"/>
+      <!-- decorative petals around the rim -->
+      <g stroke="#5b4310" stroke-width="3" fill="none">
+        <g id="petalSet">
+          <path d="M0 -200 L-12 -178 L0 -156 L12 -178 Z" fill="#d4af37"/>
+        </g>
+        <use href="#petalSet" transform="rotate(30)"/>
+        <use href="#petalSet" transform="rotate(60)"/>
+        <use href="#petalSet" transform="rotate(90)"/>
+        <use href="#petalSet" transform="rotate(120)"/>
+        <use href="#petalSet" transform="rotate(150)"/>
+        <use href="#petalSet" transform="rotate(180)"/>
+        <use href="#petalSet" transform="rotate(210)"/>
+        <use href="#petalSet" transform="rotate(240)"/>
+        <use href="#petalSet" transform="rotate(270)"/>
+        <use href="#petalSet" transform="rotate(300)"/>
+        <use href="#petalSet" transform="rotate(330)"/>
+      </g>
+
+      <!-- inner ornament ring -->
+      <circle r="172" fill="none" stroke="#5b4310" stroke-width="2"/>
+      <circle r="160" fill="#e6b939" stroke="#5b4310" stroke-width="2"/>
+
+      <!-- ornament filigree -->
+      <g stroke="#5b4310" stroke-width="2" fill="none" opacity=".75">
+        <path d="M-150 0 q-20 30 0 60 q20 -30 0 -60"/>
+        <path d="M150 0 q20 30 0 60 q-20 -30 0 -60"/>
+        <path d="M-150 0 q-20 -30 0 -60 q20 30 0 60"/>
+        <path d="M150 0 q20 -30 0 -60 q-20 30 0 60"/>
+        <g transform="rotate(45)">
+          <path d="M-140 0 q-12 22 0 44 q12 -22 0 -44"/>
+          <path d="M140 0 q12 22 0 44 q-12 -22 0 -44"/>
+          <path d="M-140 0 q-12 -22 0 -44 q12 22 0 44"/>
+          <path d="M140 0 q12 -22 0 -44 q-12 22 0 44"/>
+        </g>
+      </g>
+
+      <!-- spike accents -->
+      <g fill="#5b4310">
+        <polygon points="-200,-6 -208,0 -200,6"/>
+        <polygon points="200,-6 208,0 200,6"/>
+        <polygon points="-6,-200 0,-208 6,-200"/>
+        <polygon points="-6,200 0,208 6,200"/>
+      </g>
+    </g>
+
+    <!-- ===== "CR" emblem in the center ===== -->
+    <g>
+      <!-- subtle inset shadow disc -->
+      <circle r="120" fill="#b88a1d" stroke="#5b4310" stroke-width="2"/>
+      <circle r="118" fill="url(#goldFace)"/>
+      <text x="0" y="38" text-anchor="middle"
+            font-family="Bodoni Moda, Didot, Georgia, serif"
+            font-size="180" font-weight="900"
+            fill="#5b4310" stroke="#3a2a08" stroke-width="3">CR</text>
+      <!-- embossed highlight -->
+      <text x="-2" y="36" text-anchor="middle"
+            font-family="Bodoni Moda, Didot, Georgia, serif"
+            font-size="180" font-weight="900"
+            fill="#fff3b0" opacity=".35">CR</text>
+    </g>
+  </g>
+
+  <!-- ===== Coiled rattlesnake ===== -->
+  <g transform="translate(512 320)">
+    <!-- body coil — wraps around the medallion -->
+    <g fill="url(#snakeSkin)" stroke="#1a0f04" stroke-width="3" stroke-linejoin="round">
+      <!-- bottom under-coil -->
+      <path d="M-200 60
+               C -240 130, -160 240, 0 230
+               C 160 240, 240 130, 200 60
+               C 240 0, 230 -90, 170 -130
+               L 130 -100
+               C 170 -70, 180 -10, 150 40
+               C 130 110, 60 150, 0 145
+               C -60 150, -130 110, -150 40
+               C -180 -10, -170 -70, -130 -100
+               L -170 -130
+               C -230 -90, -240 0, -200 60 Z"/>
+
+      <!-- tail to bottom-right with rattle -->
+      <path d="M 195 35
+               C 230 60, 280 90, 330 100
+               C 360 105, 388 100, 412 90
+               L 410 70
+               C 388 78, 360 82, 332 76
+               C 290 70, 248 50, 220 22 Z"/>
+    </g>
+
+    <!-- rattle segments -->
+    <g fill="#cd9a3a" stroke="#1a0f04" stroke-width="2">
+      <polygon points="408,90 432,80 440,98 416,108"/>
+      <polygon points="436,82 458,72 468,92 444,102"/>
+      <polygon points="462,74 482,66 492,86 470,94"/>
+      <polygon points="486,68 502,62 512,80 492,88"/>
+    </g>
+    <g fill="#7a5a18" opacity=".7">
+      <line x1="416" y1="90" x2="436" y2="84" stroke="#1a0f04" stroke-width="1.4"/>
+      <line x1="442" y1="82" x2="462" y2="76" stroke="#1a0f04" stroke-width="1.4"/>
+      <line x1="468" y1="74" x2="486" y2="68" stroke="#1a0f04" stroke-width="1.4"/>
+    </g>
+
+    <!-- raised head over the top of the medallion -->
+    <g transform="translate(-180 -150) rotate(-22)">
+      <!-- neck connector -->
+      <path d="M 30 30 C 15 10, 25 -20, 60 -20 C 90 -20, 110 -10, 120 5 L 95 35 Z"
+            fill="url(#snakeSkin)" stroke="#1a0f04" stroke-width="3"/>
+      <!-- head -->
+      <path d="M 60 -28 q 70 -10 110 18 q 8 16 -2 28 q -42 18 -86 4 q -28 -8 -22 -50 z"
+            fill="#cd9a3a" stroke="#1a0f04" stroke-width="3"/>
+      <!-- jaw -->
+      <path d="M 86 8 q 36 22 78 14 q -12 24 -50 22 q -28 -2 -38 -22 z"
+            fill="#a67520" stroke="#1a0f04" stroke-width="3"/>
+      <!-- eye -->
+      <circle cx="120" cy="-10" r="6" fill="#1a0f04"/>
+      <circle cx="120" cy="-10" r="6.5" fill="none" stroke="#1a0f04" stroke-width="1"/>
+      <circle cx="118" cy="-12" r="1.5" fill="#fff" opacity=".8"/>
+      <!-- fangs -->
+      <polygon points="118,12 122,30 126,12" fill="#fff" stroke="#1a0f04" stroke-width="1"/>
+      <polygon points="138,14 142,30 146,14" fill="#fff" stroke="#1a0f04" stroke-width="1"/>
+      <!-- forked tongue -->
+      <path d="M 170 22 q 24 4 36 -6 l -2 -6 l -16 8 l -4 -10 l -10 14"
+            fill="#b8202c" stroke="#1a0f04" stroke-width="1.6"/>
+      <!-- nostril -->
+      <circle cx="160" cy="0" r="2" fill="#1a0f04"/>
+    </g>
+  </g>
+
+  <!-- subtle paper grain -->
+  <g opacity=".06" fill="#000">
+    <rect x="120" y="80" width="2" height="2"/>
+    <rect x="240" y="160" width="2" height="2"/>
+    <rect x="380" y="60" width="2" height="2"/>
+    <rect x="520" y="20" width="2" height="2"/>
+    <rect x="700" y="120" width="2" height="2"/>
+    <rect x="850" y="200" width="2" height="2"/>
+    <rect x="900" y="450" width="2" height="2"/>
+    <rect x="160" y="500" width="2" height="2"/>
+  </g>
+</svg>

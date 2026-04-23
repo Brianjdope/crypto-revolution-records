@@ -7,7 +7,7 @@
     <title>OZ THE CRYPTO GOAT — Crypto Revolution Records</title>
     <meta
       name="description"
-      content="The first tokenized record label on the blockchain. AI creator music, NFTs, and the $OZ token. Founded by OZ The Crypto Goat."
+      content="The first tokenized record label on the blockchain. AI creator music, NFTs, and the $CR token. Founded by OZ The Crypto Goat."
     />
     <link rel="preconnect" href="https://api.coingecko.com" />
     <link rel="stylesheet" href="./styles.css" />
@@ -37,6 +37,14 @@
 
     <canvas id="bg-canvas" aria-hidden="true"></canvas>
 
+    <!-- Pager controls (shown in paged mode) -->
+    <button class="pager-btn pager-prev" id="pager-prev" aria-label="Previous section">‹</button>
+    <button class="pager-btn pager-next" id="pager-next" aria-label="Next section">›</button>
+    <nav class="pager-dots" id="pager-dots" aria-label="Section navigator"></nav>
+    <div class="pager-hint" id="pager-hint" aria-hidden="true">
+      <kbd>Space</kbd> next <span>·</span> <kbd>Shift</kbd>+<kbd>Space</kbd> back
+    </div>
+
     <header class="topbar">
       <a class="brand" href="#hero" aria-label="OZ Crypto Revolution Records">
         <svg viewBox="0 0 64 64" aria-hidden="true">
@@ -58,13 +66,13 @@
       <nav class="nav" aria-label="Primary">
         <a href="#mission">Manifesto</a>
         <a href="#market">Market</a>
-        <a href="#token">$OZ</a>
+        <a href="#token">$CR</a>
         <a href="#roster">Artists</a>
         <a href="#play">Listen</a>
         <a href="#roadmap">Roadmap</a>
         <a href="#faq">FAQ</a>
       </nav>
-      <a class="cta-pill" href="#buy">Buy $OZ</a>
+      <a class="cta-pill" href="#buy">Buy CR</a>
     </header>
 
     <main>
@@ -73,9 +81,9 @@
         <div class="hero-copy">
           <p class="eyebrow"><span class="dot"></span> Est. 2026 · First tokenized record label on-chain</p>
           <h1>
-            <span class="line">OZ</span>
-            <span class="line gold">THE CRYPTO</span>
-            <span class="line">GOAT.</span>
+            <span class="line">CRYPTO</span>
+            <span class="line gold">REVOLUTION</span>
+            <span class="line">RECORDS.</span>
           </h1>
           <p class="lede">
             A new music label, built for the chain. AI-native artists. Smart-contract royalties.
@@ -83,7 +91,7 @@
             <em>Crypto Revolution</em>.
           </p>
           <div class="hero-actions">
-            <a href="#buy" class="btn btn-primary">Buy $OZ</a>
+            <a href="#buy" class="btn btn-primary">Buy CR</a>
             <a href="#play" class="btn btn-ghost">▶ Hear the label</a>
           </div>
           <div class="hero-stats">
@@ -112,18 +120,18 @@
         <div class="mission-grid">
           <article>
             <span class="num">01</span>
-            <h3>AI-native artists</h3>
-            <p>Every release is co-created in our in-house AI studio and finished by a human ear. Sound that could only exist now.</p>
+            <h3>Artists hold the bag</h3>
+            <p>No advances, no recoup trap. Artists are paid by <em>holding $CR</em> and buying equity into the label — every stream and drop compounds the token they already own.</p>
           </article>
           <article>
             <span class="num">02</span>
-            <h3>Royalties on rails</h3>
-            <p>A single smart contract splits every stream and sale to artists, holders, and the treasury — the second the money clears.</p>
+            <h3>We tokenize your music</h3>
+            <p>Bring your catalogue. We mint it on-chain, split royalties by smart contract, and hand you the wallet. The masters stay yours — the upside goes to the herd.</p>
           </article>
           <article>
             <span class="num">03</span>
-            <h3>One token, one herd</h3>
-            <p>$OZ unlocks pre-saves, drops, governance, and a permanent line into the studio. Hold it and you're on the masthead.</p>
+            <h3>Plugged into Soulflare</h3>
+            <p>Distribution, pre-saves, and fan unlocks route through <a class="soulflare-link" href="https://soulflare.com" target="_blank" rel="noopener">Soulflare</a> — the AI-native music network $CR is built on top of.</p>
           </article>
         </div>
       </section>
@@ -141,14 +149,14 @@
 
       <!-- ACT 4 — TOKENOMICS -->
       <section id="token" class="token" data-scene="token">
-        <p class="section-eyebrow">$OZ Tokenomics</p>
+        <p class="section-eyebrow">$CR Tokenomics</p>
         <div class="token-wrap">
           <div class="token-chart">
-            <canvas id="token-canvas" width="520" height="520" aria-label="OZ token allocation chart"></canvas>
+            <canvas id="token-canvas" width="520" height="520" aria-label="CR token allocation chart"></canvas>
             <div class="token-center">
               <span>Total supply</span>
               <strong>1,000,000,000</strong>
-              <em>$OZ</em>
+              <em>$CR</em>
             </div>
           </div>
           <ul class="token-legend" id="token-legend"></ul>
@@ -190,38 +198,40 @@
 
       <!-- ACT 8 — BUY -->
       <section id="buy" class="buy" data-scene="buy">
-        <p class="section-eyebrow">Buy $OZ / Join the herd</p>
+        <p class="section-eyebrow">Buy $CR / Join the herd</p>
         <h2>Claim your <span class="gold">piece of the revolution.</span></h2>
+        <p class="buy-lede">
+          No crypto knowledge required. Pay with Apple Pay or your card — we
+          create a secure CR account for you and hold the tokens.
+          <span class="gold">Move them to your own wallet anytime.</span>
+        </p>
+
+        <ol class="buy-steps" aria-label="How it works">
+          <li><span class="step-n">1</span><strong>Enter your email</strong><span>That's your CR account.</span></li>
+          <li><span class="step-n">2</span><strong>Pay your way</strong><span>Apple Pay, card, or crypto — whatever's easiest.</span></li>
+          <li><span class="step-n">3</span><strong>You're in the herd</strong><span>Tokens land in your account in seconds.</span></li>
+        </ol>
 
         <div class="buy-grid">
-          <div class="buy-card" id="buy-wallet">
+          <!-- Primary: custodial / no-wallet path -->
+          <div class="buy-card buy-card-primary" id="buy-easy">
             <header>
-              <h3>Connect wallet</h3>
-              <span class="chip">Web3</span>
+              <h3>The easy way</h3>
+              <span class="chip chip-glow">No wallet needed</span>
             </header>
-            <p>MetaMask, Phantom, WalletConnect. Pay in ETH, SOL, or USDC.</p>
-            <div class="amount">
-              <label for="amt-crypto">Amount ($OZ)</label>
-              <input id="amt-crypto" type="number" min="100" step="100" value="10000" />
-              <span class="quote" id="quote-crypto">≈ — ETH</span>
-            </div>
-            <button class="btn btn-primary" id="connect-wallet">Connect wallet</button>
-            <small id="wallet-status" class="status"></small>
-          </div>
-
-          <div class="buy-card" id="buy-card">
-            <header>
-              <h3>Pay with card</h3>
-              <span class="chip">Stripe · Apple Pay</span>
-            </header>
-            <p>Credit, debit, or one-tap with Apple Pay. Tokens delivered to your wallet.</p>
+            <p>One tap to buy. We create your CR account from your email and safely hold your tokens until you're ready to move them.</p>
             <div class="amount">
               <label for="amt-fiat">Amount (USD)</label>
               <input id="amt-fiat" type="number" min="10" step="10" value="250" />
-              <span class="quote" id="quote-fiat">= — $OZ</span>
+              <span class="quote" id="quote-fiat">= — $CR</span>
+            </div>
+            <div class="amount">
+              <label for="buy-email">Email (your account)</label>
+              <input id="buy-email" type="email" inputmode="email" autocomplete="email" placeholder="you@email.com" />
+              <span class="quote">we'll send a receipt</span>
             </div>
             <div class="pay-row">
-              <button class="btn btn-primary" id="pay-card">Pay with card</button>
+              <button class="btn btn-primary" id="pay-card">Pay $<span id="pay-amt">250</span></button>
               <button class="btn btn-apple" id="pay-apple" aria-label="Pay with Apple Pay">
                 <svg viewBox="0 0 24 24" aria-hidden="true">
                   <path
@@ -232,13 +242,50 @@
               </button>
             </div>
             <small id="card-status" class="status"></small>
+            <ul class="reassure" aria-label="Why this is safe">
+              <li><span aria-hidden="true">🔒</span> Tokens custodied in your CR account — encrypted at rest, FDIC-partner-banked fiat float.</li>
+              <li><span aria-hidden="true">↗</span> Withdraw to MetaMask, Phantom, Coinbase or any wallet — anytime, no fees on the first transfer.</li>
+              <li><span aria-hidden="true">✨</span> No seed phrases. No gas. No "what's an EVM."</li>
+            </ul>
+          </div>
+
+          <!-- Secondary: crypto-native path -->
+          <div class="buy-card buy-card-secondary" id="buy-wallet">
+            <header>
+              <h3>Already crypto-native?</h3>
+              <span class="chip">Web3</span>
+            </header>
+            <p>Bring MetaMask, Phantom, or any WalletConnect-compatible wallet. Pay in ETH, SOL, or USDC.</p>
+            <div class="amount">
+              <label for="amt-crypto">Amount ($CR)</label>
+              <input id="amt-crypto" type="number" min="100" step="100" value="10000" />
+              <span class="quote" id="quote-crypto">≈ — ETH</span>
+            </div>
+            <button class="btn btn-ghost" id="connect-wallet">Connect wallet</button>
+            <small id="wallet-status" class="status"></small>
           </div>
         </div>
 
+        <!-- Account widget (revealed after the demo purchase) -->
+        <aside class="cr-account" id="cr-account" hidden aria-live="polite">
+          <div class="cr-account-bar">
+            <div class="cra-info">
+              <span class="cra-label">Your CR account</span>
+              <strong class="cra-balance" id="cra-balance">— $CR</strong>
+              <span class="cra-id" id="cra-id"></span>
+            </div>
+            <div class="cra-actions">
+              <button class="btn btn-ghost" id="cra-withdraw">Withdraw to wallet →</button>
+            </div>
+          </div>
+          <p class="cra-note">Your tokens are safe and earning. Withdraw to any external wallet anytime, or leave them here free of charge.</p>
+        </aside>
+
         <p class="legal">
-          Demo experience. No live transactions. $OZ is a utility token; consult counsel in your
+          Demo experience. No live transactions. $CR is a utility token; consult counsel in your
           jurisdiction before participating in any token offering. Crypto Revolution Records, Inc.
-          does not provide investment advice.
+          does not provide investment advice. Custodial accounts handled by our regulated banking
+          partner; you can self-custody at any time.
         </p>
       </section>
 
@@ -271,7 +318,7 @@
           </div>
           <nav class="footer-links" aria-label="Footer">
             <a href="#mission">Manifesto</a>
-            <a href="#token">$OZ</a>
+            <a href="#token">$CR</a>
             <a href="#roster">Artists</a>
             <a href="#play">Listen</a>
             <a href="#roadmap">Roadmap</a>
