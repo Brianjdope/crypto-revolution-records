@@ -14,10 +14,9 @@ A single-page, scroll-driven brand site in the style of igloo.inc — heavy 3D, 
 | Manifesto | Three pillars of the label |
 | Live market | Live crypto prices via the public CoinGecko API + auto-refresh, with offline fallback |
 | $OZ tokenomics | Animated Canvas 2D donut chart |
-| Roster | Procedural NFT cards with hover-tilt parallax |
+| Roster | Procedural artist cover cards with hover-tilt parallax |
 | Listen | Web Audio synth player + circular visualizer (no audio files needed) |
-| Roadmap | Phased timeline |
-| Buy | Wallet connect (EIP-1193) + Stripe / Apple Pay placeholder, with live quoting |
+| Buy | Custodial onramp (email + Apple Pay/card) + optional wallet connect |
 | FAQ | Accordion |
 | Newsletter | Inline subscribe with validation |
 | Cookie banner | Dismissable, persists in localStorage |
@@ -28,7 +27,7 @@ A single-page, scroll-driven brand site in the style of igloo.inc — heavy 3D, 
 - [Three.js](https://threejs.org/) (CDN via importmap) for the 3D scene + post-processing
 - [Lenis](https://github.com/darkroomengineering/lenis) for smooth scroll
 - Web Audio API for the procedural music
-- Canvas 2D for tokenomics donut + visualizer + NFT cards
+- Canvas 2D for tokenomics donut + visualizer + artist cover cards
 - CoinGecko free API for live crypto prices
 
 All third-party JS is loaded from `unpkg.com` via an import map — no `npm install`, no bundler.
@@ -52,10 +51,9 @@ src/main.js        # orchestrator, smooth scroll, reveal observers
 src/scene.js       # Three.js: goat, particles, rings, bloom, scroll-driven camera
 src/crypto.js      # live CoinGecko ticker + market grid
 src/tokenomics.js  # animated $OZ donut chart
-src/roster.js      # procedural NFT cards + hover-tilt
+src/roster.js      # procedural artist cover cards + hover-tilt
 src/music.js       # Web Audio synth player + circular visualizer
-src/roadmap.js     # phased timeline
-src/buy.js         # wallet connect + Stripe / Apple Pay placeholder
+src/buy.js         # custodial easy-buy + optional wallet connect
 src/extras.js      # press strip, FAQ, newsletter, socials, cookie banner
 ```
 

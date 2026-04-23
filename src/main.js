@@ -8,7 +8,6 @@ import { initCryptoTicker } from "./crypto.js";
 import { initTokenomics } from "./tokenomics.js";
 import { initRoster } from "./roster.js";
 import { initMusicPlayer } from "./music.js";
-import { initRoadmap } from "./roadmap.js";
 import { initBuy } from "./buy.js";
 import { initExtras } from "./extras.js";
 
@@ -97,7 +96,6 @@ const PANELS = [
   { id: "token",   label: "$CR"       },
   { id: "roster",  label: "Artists"   },
   { id: "play",    label: "Listen"    },
-  { id: "roadmap", label: "Roadmap"   },
   { id: "buy",     label: "Buy"       },
   { id: "faq",     label: "FAQ"       },
   { id: "join",    label: "Join"      },
@@ -268,7 +266,6 @@ document.querySelectorAll(".hero h1 .line").forEach((line, i) => {
 // ---------- Boot the sections ----------
 initRoster();
 initMusicPlayer();
-initRoadmap();
 initTokenomics();
 initBuy();
 initExtras();
