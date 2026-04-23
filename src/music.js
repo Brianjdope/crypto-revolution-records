@@ -5,12 +5,12 @@
 // visualizer for the gold "now playing" stage.
 // ============================================================
 const TRACKS = [
-  { title: "Gold Standard",      artist: "OZ The Crypto Goat",  duration: "2:34", tag: "FEATURED",  bpm: 92,  key: "C#", scale: [0, 3, 7, 10, 14], pad: 110, pulse: "trap" },
-  { title: "Mint Condition",     artist: "MERIDIAN x VAULT 808",duration: "3:12", tag: "NEW",       bpm: 140, key: "F",  scale: [0, 5, 7, 10, 12], pad: 165, pulse: "house" },
-  { title: "Tokenize My Soul",   artist: "GHOST CHOIR",         duration: "4:01", tag: "STREAMING", bpm: 76,  key: "A",  scale: [0, 3, 5, 7, 10], pad: 220, pulse: "ambient" },
-  { title: "Proof of Work",      artist: "THE PROOF",           duration: "3:48", tag: "EXCLUSIVE", bpm: 128, key: "D",  scale: [0, 3, 5, 7, 12], pad: 146, pulse: "drill" },
-  { title: "Holo Jam",           artist: "AURELIA",             duration: "3:22", tag: "STREAMING", bpm: 118, key: "G",  scale: [0, 4, 7, 11, 14], pad: 196, pulse: "pop" },
-  { title: "Run the Node",       artist: "NODE/RUNNER",         duration: "2:55", tag: "NEW",       bpm: 132, key: "E",  scale: [0, 3, 7, 10, 12], pad: 165, pulse: "house" },
+  { title: "Gold Standard",      artist: "OZ The Crypto Goat",  duration: "2:34", nft: "MINTED",  bpm: 92,  key: "C#", scale: [0, 3, 7, 10, 14], pad: 110, pulse: "trap" },
+  { title: "Mint Condition",     artist: "MERIDIAN x VAULT 808",duration: "3:12", nft: "1/100",   bpm: 140, key: "F",  scale: [0, 5, 7, 10, 12], pad: 165, pulse: "house" },
+  { title: "Tokenize My Soul",   artist: "GHOST CHOIR",         duration: "4:01", nft: "MINTED",  bpm: 76,  key: "A",  scale: [0, 3, 5, 7, 10], pad: 220, pulse: "ambient" },
+  { title: "Proof of Work",      artist: "THE PROOF",           duration: "3:48", nft: "1/250",   bpm: 128, key: "D",  scale: [0, 3, 5, 7, 12], pad: 146, pulse: "drill" },
+  { title: "Holo Jam",           artist: "AURELIA",             duration: "3:22", nft: "MINTED",  bpm: 118, key: "G",  scale: [0, 4, 7, 11, 14], pad: 196, pulse: "pop" },
+  { title: "Run the Node",       artist: "NODE/RUNNER",         duration: "2:55", nft: "1/50",    bpm: 132, key: "E",  scale: [0, 3, 7, 10, 12], pad: 165, pulse: "house" },
 ];
 
 let ctx, master, analyser, currentNodes = [], rafViz, currentIndex = -1;
@@ -300,7 +300,7 @@ export function initMusicPlayer() {
         <span class="a">${t.artist}</span>
       </span>
       <span class="dur">${t.duration}</span>
-      <span class="badge">${t.tag}</span>
+      <span class="nft">${t.nft}</span>
     </li>
   `).join("");
 

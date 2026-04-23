@@ -12,6 +12,13 @@ const SLICES = [
   { label: "Airdrop · early herd",   pct: 3,  color: "#ef9c4a", note: "First listeners" },
 ];
 
+const TOTAL_SUPPLY = 1_000_000_000;
+const SUPPLY_BREAKDOWN = {
+  burn: 0.12,
+  lock: 0.28,
+  stake: 0.34,
+};
+
 function drawDonut(canvas, t) {
   const ctx = canvas.getContext("2d");
   const dpr = window.devicePixelRatio || 1;
@@ -96,6 +103,24 @@ function renderLegend(el) {
   `).join("");
 }
 
+function fmtSupply(n) {
+  if (n >= 1_000_000) return (n / 1_000_000).toFixed(1).replace(/\.0$/, "") + "M";
+  if (n >= 1_000) return (n / 1_000).toFixed(1).replace(/\.0$/, "") + "K";
+  return Math.round(n).toString();
+}
+
+function countUp(el, target, duration = 1600) {
+  if (!el) return;
+  const start = performance.now();
+  function step(now) {
+    const k = Math.min(1, (now - start) / duration);
+    const eased = 1 - Math.pow(1 - k, 3);
+    el.textContent = fmtSupply(target * eased);
+    if (k < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
 export function initTokenomics() {
   const canvas = document.getElementById("token-canvas");
   const legend = document.getElementById("token-legend");
@@ -122,6 +147,10 @@ export function initTokenomics() {
         started = true;
         cancelAnimationFrame(raf);
         animate();
+        // count up the supply stats in sync with the donut reveal
+        countUp(document.getElementById("supply-burn"), TOTAL_SUPPLY * SUPPLY_BREAKDOWN.burn);
+        countUp(document.getElementById("supply-lock"), TOTAL_SUPPLY * SUPPLY_BREAKDOWN.lock);
+        countUp(document.getElementById("supply-stake"), TOTAL_SUPPLY * SUPPLY_BREAKDOWN.stake);
       }
     });
   }, { threshold: 0.35 });

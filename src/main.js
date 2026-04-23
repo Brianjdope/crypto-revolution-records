@@ -8,6 +8,7 @@ import { initCryptoTicker } from "./crypto.js";
 import { initTokenomics } from "./tokenomics.js";
 import { initRoster } from "./roster.js";
 import { initMusicPlayer } from "./music.js";
+import { initRoadmap } from "./roadmap.js";
 import { initBuy } from "./buy.js";
 import { initExtras } from "./extras.js";
 
@@ -61,12 +62,15 @@ let lenis;
       stage.setScroll(Math.max(0, Math.min(1, y / Math.max(1, limit))));
     });
   } catch (e) {
-    // graceful fallback to native scroll
-    window.addEventListener("scroll", () => {
-      const max = document.documentElement.scrollHeight - window.innerHeight;
-      stage.setScroll(window.scrollY / Math.max(1, max));
-    }, { passive: true });
+    // graceful fallback to native scroll below
   }
+  // Always wire a native scroll listener too — lenis smooths wheel
+  // events but programmatic window.scrollTo / anchor jumps still need
+  // the scene to update.
+  window.addEventListener("scroll", () => {
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    stage.setScroll(window.scrollY / Math.max(1, max));
+  }, { passive: true });
 })();
 
 // nav anchor smoothing — works whether lenis loaded or not
@@ -76,111 +80,10 @@ document.querySelectorAll('a[href^="#"]').forEach((a) => {
     const el = document.getElementById(id);
     if (!el) return;
     e.preventDefault();
-    if (document.body.classList.contains("is-paged")) {
-      goToPanel(id);
-    } else if (lenis) {
-      lenis.scrollTo(el, { duration: 1.4, offset: -40 });
-    } else {
-      el.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
+    if (lenis) lenis.scrollTo(el, { duration: 1.4, offset: -40 });
+    else el.scrollIntoView({ behavior: "smooth", block: "start" });
   });
 });
-
-// ---------- Paged mode ----------
-// One section per viewport. Switched via nav, prev/next arrows, keyboard
-// arrows, and a dotted index at the bottom.
-const PANELS = [
-  { id: "hero",    label: "Home"      },
-  { id: "mission", label: "Manifesto" },
-  { id: "market",  label: "Market"    },
-  { id: "token",   label: "$CR"       },
-  { id: "roster",  label: "Artists"   },
-  { id: "play",    label: "Listen"    },
-  { id: "buy",     label: "Buy"       },
-  { id: "faq",     label: "FAQ"       },
-  { id: "join",    label: "Join"      },
-];
-let activePanel = 0;
-
-function renderDots() {
-  const dots = document.getElementById("pager-dots");
-  if (!dots) return;
-  dots.innerHTML = PANELS.map(
-    (p, i) => `<button type="button" data-idx="${i}" data-label="${p.label}" aria-label="${p.label}"></button>`
-  ).join("");
-  dots.addEventListener("click", (e) => {
-    const b = e.target.closest("button[data-idx]");
-    if (!b) return;
-    goToPanel(PANELS[+b.dataset.idx].id);
-  });
-}
-
-function setActive(idx) {
-  idx = Math.max(0, Math.min(PANELS.length - 1, idx));
-  activePanel = idx;
-  const target = PANELS[idx].id;
-  document.querySelectorAll("main > section, main > footer").forEach((el) => {
-    el.classList.toggle("is-active", el.id === target);
-  });
-  // scroll each panel to top whenever it activates
-  const activeEl = document.getElementById(target);
-  if (activeEl) activeEl.scrollTop = 0;
-  document.querySelectorAll("#pager-dots button").forEach((b, i) => {
-    b.classList.toggle("is-active", i === idx);
-  });
-  const prev = document.getElementById("pager-prev");
-  const next = document.getElementById("pager-next");
-  if (prev) prev.disabled = idx === 0;
-  if (next) next.disabled = idx === PANELS.length - 1;
-  stage.setSceneIndex(idx);
-  stage.setScroll(idx / Math.max(1, PANELS.length - 1));
-  if (location.hash !== "#" + target) {
-    history.replaceState(null, "", "#" + target);
-  }
-}
-
-function goToPanel(id) {
-  const idx = PANELS.findIndex((p) => p.id === id);
-  if (idx !== -1) setActive(idx);
-}
-
-function initPager() {
-  document.body.classList.add("is-paged");
-  // Hide non-panel sections (press strip) in paged mode
-  document.querySelectorAll("main > section:not([id])").forEach((el) => {
-    el.style.display = "none";
-  });
-  // Ensure footer is positioned like a panel
-  const footer = document.querySelector("main > footer");
-  if (footer && !footer.id) footer.id = "join";
-  renderDots();
-  document.getElementById("pager-prev")?.addEventListener("click", () => setActive(activePanel - 1));
-  document.getElementById("pager-next")?.addEventListener("click", () => setActive(activePanel + 1));
-  // Page advance is SPACE-ONLY (à la because-recollection.com).
-  // Everything else — wheel, trackpad, arrow keys, touch — scrolls the
-  // active panel normally. Click the dots or arrows to jump explicitly.
-  window.addEventListener("keydown", (e) => {
-    if (e.target?.closest?.("input, textarea")) return;
-    const k = e.key;
-    if (k === " " || k === "Spacebar") {
-      e.preventDefault();
-      setActive(activePanel + (e.shiftKey ? -1 : 1));
-    }
-  });
-  window.addEventListener("hashchange", () => {
-    const id = location.hash.slice(1);
-    if (id) goToPanel(id);
-  });
-  const start = PANELS.findIndex((p) => p.id === location.hash.slice(1));
-  setActive(start >= 0 ? start : 0);
-
-  const hint = document.getElementById("pager-hint");
-  if (hint) {
-    setTimeout(() => hint.classList.add("is-in"), 600);
-    setTimeout(() => hint.classList.add("is-faded"), 6000);
-  }
-}
-initPager();
 
 // ---------- Section observer ----------
 const sectionList = Array.from(document.querySelectorAll("section[data-scene]"));
@@ -224,6 +127,7 @@ document.querySelectorAll(".hero h1 .line").forEach((line, i) => {
 // ---------- Boot the sections ----------
 initRoster();
 initMusicPlayer();
+initRoadmap();
 initTokenomics();
 initBuy();
 initExtras();

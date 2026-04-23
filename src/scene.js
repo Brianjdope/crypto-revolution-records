@@ -1,8 +1,8 @@
 // ============================================================
-// Three.js scene — golden goat in space
-// Procedural geometry so we don't depend on external GLB models.
-// Inspired by igloo.inc style: dark stage, hero object, particles,
-// scroll-driven camera.
+// Three.js scene — golden Bitcoin-B coiled by a rattlesnake.
+// Gadsden-flag "don't tread on my sats" energy, rendered as a
+// procedural metal emblem. Centerpiece in the hero, then drifts
+// into the background as the user scrolls.
 // ============================================================
 import * as THREE from "three";
 import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
@@ -23,7 +23,7 @@ export class CryptoScene {
     this._initScene();
     this._initEnvironment();
     this._initLights();
-    this._buildFlag();
+    this._buildEmblem();
     this._buildParticles();
     this._buildRings();
     this._buildGrid();
@@ -105,77 +105,12 @@ export class CryptoScene {
   }
 
   // -----------------------------------------------------------
-  // The CR Revolution flag — a waving plane textured with
-  // /assets/flag-cr.svg. Replaces the earlier hero object; the
-  // rest of the animate loop still drives `this.goat` as a group.
+  // Emblem — ornate bitcoin coin with a rattlesnake coiled around
+  // it. Gadsden-flag silhouette, luxury-metal finish. `this.goat`
+  // is kept as the external handle so the scroll rig and any
+  // external code using that name keeps working.
   // -----------------------------------------------------------
-  _buildFlag() {
-    this.goat = new THREE.Group();
-
-    // Primary texture: the exact image the user supplied (save it at
-    // /assets/bg-flag.png). Falls back to the SVG so the site never ships
-    // blank if the PNG is missing.
-    const loader = new THREE.TextureLoader();
-    const tex = loader.load(
-      "./assets/bg-flag.png",
-      undefined,
-      undefined,
-      () => {
-        const fallback = loader.load("./assets/flag-cr.svg");
-        fallback.colorSpace = THREE.SRGBColorSpace;
-        fallback.anisotropy = 8;
-        this.flag.material.map = fallback;
-        this.flag.material.needsUpdate = true;
-      }
-    );
-    tex.colorSpace = THREE.SRGBColorSpace;
-    tex.anisotropy = 8;
-
-    const W = 5.4;
-    const H = W * (640 / 1024);
-    const geo = new THREE.PlaneGeometry(W, H, 64, 36);
-    // stash original positions so the shader-less wave keeps flat baseline
-    const basePos = geo.attributes.position.array.slice();
-    geo.userData.basePos = basePos;
-
-    const mat = new THREE.MeshStandardMaterial({
-      map: tex,
-      side: THREE.DoubleSide,
-      metalness: 0.15,
-      roughness: 0.7,
-      envMapIntensity: 0.6,
-    });
-    const flag = new THREE.Mesh(geo, mat);
-    flag.position.set(0, 0.1, 0);
-    this.flag = flag;
-    this.goat.add(flag);
-
-    // a thin pole running down the left edge
-    const poleMat = new THREE.MeshStandardMaterial({
-      color: 0x2b1c08,
-      metalness: 0.8,
-      roughness: 0.35,
-    });
-    const pole = new THREE.Mesh(
-      new THREE.CylinderGeometry(0.04, 0.04, H + 0.9, 16),
-      poleMat
-    );
-    pole.position.set(-W / 2 - 0.02, 0.1, 0);
-    this.goat.add(pole);
-
-    const finial = new THREE.Mesh(
-      new THREE.SphereGeometry(0.09, 20, 16),
-      new THREE.MeshStandardMaterial({ color: 0xd4af37, metalness: 1, roughness: 0.25 })
-    );
-    finial.position.set(-W / 2 - 0.02, 0.1 + H / 2 + 0.48, 0);
-    this.goat.add(finial);
-
-    this.goat.position.set(0.15, -0.1, 0);
-    this.goat.rotation.y = -0.25;
-    this.scene.add(this.goat);
-  }
-
-  _buildGoat() {
+  _buildEmblem() {
     this.goat = new THREE.Group();
 
     const goldMat = new THREE.MeshStandardMaterial({
@@ -185,10 +120,10 @@ export class CryptoScene {
       envMapIntensity: 0.9,
     });
     const goldHighMat = new THREE.MeshStandardMaterial({
-      color: 0xd4af37,
+      color: 0xe9c24a,
       metalness: 1.0,
-      roughness: 0.22,
-      envMapIntensity: 1.0,
+      roughness: 0.18,
+      envMapIntensity: 1.1,
     });
     const goldDarkMat = new THREE.MeshStandardMaterial({
       color: 0x6e521a,
@@ -196,193 +131,360 @@ export class CryptoScene {
       roughness: 0.45,
       envMapIntensity: 0.8,
     });
-    const eyeMat = new THREE.MeshStandardMaterial({
+    const onyxMat = new THREE.MeshStandardMaterial({
       color: 0x0a0805,
-      metalness: 0.4,
-      roughness: 0.3,
+      metalness: 0.6,
+      roughness: 0.28,
+    });
+    const snakeMat = new THREE.MeshStandardMaterial({
+      color: 0x9a7a22,
+      metalness: 1.0,
+      roughness: 0.38,
+      envMapIntensity: 0.95,
+    });
+    const snakeScaleMat = new THREE.MeshStandardMaterial({
+      color: 0x4a3710,
+      metalness: 1.0,
+      roughness: 0.55,
+      envMapIntensity: 0.6,
     });
 
-    // body — smooth elongated capsule (looks sculpted, not blocky)
-    const body = new THREE.Mesh(new THREE.CapsuleGeometry(0.78, 1.2, 16, 32), goldMat);
-    body.rotation.z = Math.PI / 2;
-    body.position.set(0, -0.2, 0);
-    body.scale.set(1, 1, 0.92);
-    this.goat.add(body);
-
-    // chest swell
-    const chest = new THREE.Mesh(new THREE.SphereGeometry(0.62, 32, 24), goldMat);
-    chest.scale.set(1.1, 0.95, 0.95);
-    chest.position.set(0.65, -0.1, 0);
-    this.goat.add(chest);
-
-    // neck
-    const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.32, 0.46, 0.55, 24), goldMat);
-    neck.rotation.z = -0.6;
-    neck.position.set(0.95, 0.3, 0);
-    this.goat.add(neck);
-
-    // head — high-poly sphere, slightly elongated
-    const head = new THREE.Mesh(new THREE.SphereGeometry(0.42, 36, 28), goldMat);
-    head.scale.set(1.25, 1.0, 0.95);
-    head.position.set(1.25, 0.55, 0);
-    head.rotation.z = 0.18;
-    this.head = head;
-    this.goat.add(head);
-
-    // forehead crest detail
-    const crest = new THREE.Mesh(new THREE.SphereGeometry(0.12, 18, 12), goldHighMat);
-    crest.position.set(1.3, 0.78, 0);
-    this.goat.add(crest);
-
-    // snout — tapered
-    const snout = new THREE.Mesh(new THREE.CapsuleGeometry(0.18, 0.18, 8, 16), goldMat);
-    snout.rotation.z = Math.PI / 2;
-    snout.position.set(1.7, 0.42, 0);
-    this.goat.add(snout);
-
-    // nose tip
-    const nose = new THREE.Mesh(new THREE.SphereGeometry(0.085, 16, 12), goldDarkMat);
-    nose.position.set(1.92, 0.42, 0);
-    this.goat.add(nose);
-
-    // beard — tapered cone with extra segments
-    const beard = new THREE.Mesh(new THREE.ConeGeometry(0.16, 0.5, 12), goldMat);
-    beard.rotation.x = Math.PI;
-    beard.position.set(1.65, 0.1, 0);
-    this.goat.add(beard);
-
-    // eyes (now glowing softly)
-    const eyeGeo = new THREE.SphereGeometry(0.068, 16, 16);
-    const eyeL = new THREE.Mesh(eyeGeo, eyeMat);
-    eyeL.position.set(1.32, 0.65, 0.28);
-    const eyeR = eyeL.clone();
-    eyeR.position.z = -0.28;
-    this.goat.add(eyeL, eyeR);
-
     // -----------------------------------------------------------
-    // Horns — built from a cubic Bezier sweep so they curve like
-    // real ram/goat horns, not just a plain torus arc.
+    // 1. The coin — an ornate bezeled disc that carries the B.
     // -----------------------------------------------------------
-    const buildHorn = (mirror) => {
-      const m = mirror ? -1 : 1;
-      const curve = new THREE.CubicBezierCurve3(
-        new THREE.Vector3(0, 0, 0),
-        new THREE.Vector3(-0.05, 0.45, 0.18 * m),
-        new THREE.Vector3(-0.5, 0.7, 0.55 * m),
-        new THREE.Vector3(-0.85, 0.45, 0.95 * m)
-      );
-      const geo = new THREE.TubeGeometry(curve, 80, 0.085, 16, false);
-      // taper: shrink the radius along length using vertex displacement
-      const pos = geo.attributes.position;
-      const tmp = new THREE.Vector3();
-      for (let i = 0; i < pos.count; i++) {
-        tmp.fromBufferAttribute(pos, i);
-        const t = i / pos.count;
-        const taper = 1 - t * 0.6;
-        // approximate radial shrink toward curve axis: scale toward nearest curve point
-        tmp.multiplyScalar(0.92 + taper * 0.08); // gentle taper effect
-        pos.setXYZ(i, tmp.x, tmp.y, tmp.z);
-      }
-      pos.needsUpdate = true;
-      geo.computeVertexNormals();
-      const mesh = new THREE.Mesh(geo, goldHighMat);
-      mesh.position.set(1.05, 0.85, 0);
-      return mesh;
-    };
-    this.goat.add(buildHorn(false), buildHorn(true));
+    const coin = new THREE.Group();
+    const coinR = 1.15;
 
-    // ears
-    const earGeo = new THREE.ConeGeometry(0.16, 0.36, 12);
-    const earL = new THREE.Mesh(earGeo, goldDarkMat);
-    earL.position.set(0.95, 0.92, 0.46);
-    earL.rotation.set(0.3, 0, -1.0);
-    const earR = earL.clone();
-    earR.position.z = -0.46;
-    earR.rotation.set(-0.3, 0, -1.0);
-    this.goat.add(earL, earR);
+    const face = new THREE.Mesh(
+      new THREE.CylinderGeometry(coinR, coinR, 0.14, 96),
+      goldMat
+    );
+    face.rotation.x = Math.PI / 2;
+    coin.add(face);
 
-    // legs — slightly tapered cylinders, more segments for smoother edges
-    const legGeo = new THREE.CylinderGeometry(0.13, 0.09, 1.0, 16);
-    const legPositions = [
-      [0.72, -0.95, 0.42],
-      [0.72, -0.95, -0.42],
-      [-0.62, -0.95, 0.42],
-      [-0.62, -0.95, -0.42],
-    ];
-    legPositions.forEach((p) => {
-      const leg = new THREE.Mesh(legGeo, goldMat);
-      leg.position.set(...p);
-      this.goat.add(leg);
-
-      // hoof
-      const hoof = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.11, 0.11, 0.12, 16),
-        goldDarkMat
-      );
-      hoof.position.set(p[0], p[1] - 0.5, p[2]);
-      this.goat.add(hoof);
-    });
-
-    // tail
-    const tail = new THREE.Mesh(new THREE.ConeGeometry(0.12, 0.42, 12), goldMat);
-    tail.position.set(-1.05, 0.1, 0);
-    tail.rotation.z = 0.6;
-    this.goat.add(tail);
-
-    // -----------------------------------------------------------
-    // The $CR medallion — bezeled disc with raised "CR" face.
-    // -----------------------------------------------------------
-    const pendant = new THREE.Group();
-
-    const disc = new THREE.Mesh(
-      new THREE.CylinderGeometry(0.34, 0.34, 0.06, 48),
+    // outer rim
+    const rim = new THREE.Mesh(
+      new THREE.TorusGeometry(coinR, 0.075, 20, 120),
       goldHighMat
     );
-    disc.rotation.x = Math.PI / 2;
-    pendant.add(disc);
+    coin.add(rim);
 
-    const bezel = new THREE.Mesh(
-      new THREE.TorusGeometry(0.34, 0.025, 12, 48),
+    // inner bezel ring
+    const bezelInner = new THREE.Mesh(
+      new THREE.TorusGeometry(coinR - 0.12, 0.018, 12, 120),
       goldDarkMat
     );
-    pendant.add(bezel);
+    coin.add(bezelInner);
 
-    const innerRing = new THREE.Mesh(
-      new THREE.TorusGeometry(0.26, 0.012, 10, 48),
-      goldDarkMat
-    );
-    pendant.add(innerRing);
-
-    // OZ face badge — a tiny extruded torus knot looks like an emblem
-    const emblem = new THREE.Mesh(
-      new THREE.TorusKnotGeometry(0.12, 0.028, 80, 12, 2, 3),
-      goldHighMat
-    );
-    emblem.scale.setScalar(0.9);
-    pendant.add(emblem);
-
-    // chain — small torus loops
-    const chainMat = new THREE.MeshStandardMaterial({
-      color: 0xd4af37,
-      metalness: 1,
-      roughness: 0.25,
-    });
-    for (let i = 0; i < 14; i++) {
-      const ang = (i / 14) * Math.PI - Math.PI / 2;
-      const link = new THREE.Mesh(new THREE.TorusGeometry(0.05, 0.013, 8, 16), chainMat);
-      const r = 0.62;
-      link.position.set(Math.cos(ang) * r * 0.6, Math.sin(ang) * r * 0.5 + 0.15, 0);
-      link.rotation.x = i % 2 === 0 ? 0 : Math.PI / 2;
-      pendant.add(link);
+    // decorative dot ring (like old coins)
+    const dotRingR = coinR - 0.22;
+    const dots = 56;
+    for (let i = 0; i < dots; i++) {
+      const a = (i / dots) * Math.PI * 2;
+      const d = new THREE.Mesh(
+        new THREE.SphereGeometry(0.024, 10, 8),
+        goldHighMat
+      );
+      d.position.set(Math.cos(a) * dotRingR, Math.sin(a) * dotRingR, 0.075);
+      coin.add(d);
     }
 
-    pendant.position.set(0.85, -0.1, 0);
+    // engraved filigree — a subtle sun-ray pattern around the B
+    const rays = 24;
+    for (let i = 0; i < rays; i++) {
+      const a = (i / rays) * Math.PI * 2;
+      const ray = new THREE.Mesh(
+        new THREE.BoxGeometry(0.42, 0.018, 0.008),
+        goldDarkMat
+      );
+      ray.position.set(Math.cos(a) * (coinR - 0.48), Math.sin(a) * (coinR - 0.48), 0.075);
+      ray.rotation.z = a;
+      coin.add(ray);
+    }
+
+    // -----------------------------------------------------------
+    // 2. The Bitcoin "B" — extruded 2D shape with two bowl holes
+    //    and the iconic vertical strike bars poking out top/bottom.
+    // -----------------------------------------------------------
+    const B = new THREE.Shape();
+    // Outer silhouette — clockwise from top-left of the top strike bar
+    B.moveTo(-0.40, 0.85);
+    B.lineTo(-0.20, 0.85);
+    B.lineTo(-0.20, 0.70);
+    B.lineTo(0.05, 0.70);
+    B.bezierCurveTo(0.55, 0.70, 0.55, 0.15, 0.05, 0.15);
+    B.bezierCurveTo(0.62, 0.15, 0.62, -0.50, 0.05, -0.50);
+    B.lineTo(-0.20, -0.50);
+    B.lineTo(-0.20, -0.65);
+    B.lineTo(-0.40, -0.65);
+    B.lineTo(-0.40, -0.50);
+    B.lineTo(-0.52, -0.50);
+    B.lineTo(-0.52, 0.70);
+    B.lineTo(-0.40, 0.70);
+    B.lineTo(-0.40, 0.85);
+
+    // top bowl inner hole
+    const topHole = new THREE.Path();
+    topHole.moveTo(-0.20, 0.55);
+    topHole.lineTo(0.05, 0.55);
+    topHole.bezierCurveTo(0.32, 0.55, 0.32, 0.30, 0.05, 0.30);
+    topHole.lineTo(-0.20, 0.30);
+    topHole.lineTo(-0.20, 0.55);
+    B.holes.push(topHole);
+
+    // bottom bowl inner hole
+    const botHole = new THREE.Path();
+    botHole.moveTo(-0.20, 0.0);
+    botHole.lineTo(0.05, 0.0);
+    botHole.bezierCurveTo(0.40, 0.0, 0.40, -0.35, 0.05, -0.35);
+    botHole.lineTo(-0.20, -0.35);
+    botHole.lineTo(-0.20, 0.0);
+    B.holes.push(botHole);
+
+    const bGeo = new THREE.ExtrudeGeometry(B, {
+      depth: 0.22,
+      bevelEnabled: true,
+      bevelThickness: 0.04,
+      bevelSize: 0.028,
+      bevelSegments: 4,
+      curveSegments: 64,
+    });
+    bGeo.center();
+    const bMesh = new THREE.Mesh(bGeo, goldHighMat);
+    bMesh.position.set(0, 0, 0.15);
+    coin.add(bMesh);
+
+    this.coin = coin;
+    this.goat.add(coin);
+
+    // keep `this.pendant` as the spinning accent ring (external API)
+    const pendant = new THREE.Group();
+    const spinRing = new THREE.Mesh(
+      new THREE.TorusGeometry(coinR + 0.18, 0.014, 10, 180),
+      goldHighMat
+    );
+    pendant.add(spinRing);
+    const spinRing2 = new THREE.Mesh(
+      new THREE.TorusGeometry(coinR + 0.32, 0.008, 8, 180),
+      goldDarkMat
+    );
+    spinRing2.rotation.x = Math.PI / 12;
+    pendant.add(spinRing2);
     this.pendant = pendant;
     this.goat.add(pendant);
 
-    this.goat.position.set(0.4, -0.2, 0);
-    this.goat.rotation.y = -0.5;
+    // -----------------------------------------------------------
+    // 3. The rattlesnake — tube geometry following a curve that
+    //    coils around the back of the coin and peeks in front.
+    // -----------------------------------------------------------
+    const snake = new THREE.Group();
+
+    // Define a coiling spline. The snake body wraps behind the coin
+    // (z<0), crosses to the right side in front (z>0), then the
+    // head rears up on the left-top.
+    const coilR = coinR + 0.22;
+    const bodyPts = [];
+    // tail start (lower-right behind coin)
+    bodyPts.push(new THREE.Vector3( 1.85, -0.85, -0.55));
+    bodyPts.push(new THREE.Vector3( 1.45, -0.75, -0.35));
+    bodyPts.push(new THREE.Vector3( 1.10, -0.90, -0.15));
+    // wrap along the bottom of the coin, behind it
+    const wrapSteps = 22;
+    for (let i = 0; i < wrapSteps; i++) {
+      const t = i / (wrapSteps - 1);
+      // start at -45deg, go clockwise around the back to +180
+      const a = -Math.PI * 0.25 - t * Math.PI * 1.6;
+      const r = coilR + Math.sin(t * Math.PI) * 0.05;
+      const z = -0.35 - Math.sin(t * Math.PI) * 0.25; // stays behind coin
+      bodyPts.push(new THREE.Vector3(Math.cos(a) * r, Math.sin(a) * r, z));
+    }
+    // body crosses in front of the coin on the left side
+    bodyPts.push(new THREE.Vector3(-1.25, 0.55, 0.05));
+    bodyPts.push(new THREE.Vector3(-1.05, 0.80, 0.30));
+    bodyPts.push(new THREE.Vector3(-0.75, 0.95, 0.50));
+    // neck rears up
+    bodyPts.push(new THREE.Vector3(-0.45, 1.25, 0.70));
+    bodyPts.push(new THREE.Vector3(-0.22, 1.55, 0.85));
+    // head base
+    bodyPts.push(new THREE.Vector3(-0.05, 1.72, 0.92));
+
+    const spine = new THREE.CatmullRomCurve3(bodyPts, false, "catmullrom", 0.4);
+
+    // Taper along length — thick near tail/middle, thinner toward head & toward rattle.
+    const segCount = 260;
+    const radialCount = 14;
+    // Build a TubeGeometry then non-uniformly scale radii per-ring.
+    const tubeGeo = new THREE.TubeGeometry(spine, segCount, 0.12, radialCount, false);
+    const pos = tubeGeo.attributes.position;
+    const v = new THREE.Vector3();
+    // TubeGeometry lays out vertices in (segCount+1) rings of radialCount+1 verts.
+    // For each vertex, compute its ring index and shrink toward spine accordingly.
+    // We reconstruct ring centers by sampling the spine at t = ring/segCount.
+    for (let ring = 0; ring <= segCount; ring++) {
+      const t = ring / segCount;
+      const center = spine.getPointAt(t);
+      // thickness profile: thicker in the coiled middle, thin at rattle & head
+      let thickness;
+      if (t < 0.08) thickness = 0.55 + t * 4.5;          // rattle side: narrow
+      else if (t > 0.94) thickness = 1.2 - (t - 0.94) * 8; // head taper
+      else thickness = 0.95 + Math.sin((t - 0.08) / 0.86 * Math.PI) * 0.15;
+      for (let rad = 0; rad <= radialCount; rad++) {
+        const idx = ring * (radialCount + 1) + rad;
+        v.fromBufferAttribute(pos, idx);
+        const dx = v.x - center.x;
+        const dy = v.y - center.y;
+        const dz = v.z - center.z;
+        v.set(center.x + dx * thickness, center.y + dy * thickness, center.z + dz * thickness);
+        pos.setXYZ(idx, v.x, v.y, v.z);
+      }
+    }
+    pos.needsUpdate = true;
+    tubeGeo.computeVertexNormals();
+    const body = new THREE.Mesh(tubeGeo, snakeMat);
+    snake.add(body);
+
+    // Scale ridges — small rings along the body suggesting diamondback pattern
+    const ridgeCount = 42;
+    for (let i = 2; i < ridgeCount; i++) {
+      const t = i / ridgeCount;
+      if (t < 0.06 || t > 0.94) continue;
+      const p = spine.getPointAt(t);
+      const tan = spine.getTangentAt(t).normalize();
+      const ring = new THREE.Mesh(
+        new THREE.TorusGeometry(0.115, 0.012, 6, 18),
+        snakeScaleMat
+      );
+      ring.position.copy(p);
+      ring.lookAt(p.clone().add(tan));
+      snake.add(ring);
+    }
+
+    // Rattle — stacked tapered discs at the tail end
+    const rattleStart = bodyPts[0].clone();
+    const rattleDir = new THREE.Vector3(0.2, -0.1, -0.25).normalize();
+    for (let i = 0; i < 7; i++) {
+      const s = 0.09 - i * 0.008;
+      const seg = new THREE.Mesh(
+        new THREE.ConeGeometry(s, 0.08, 14, 1, true),
+        goldDarkMat
+      );
+      seg.position.copy(rattleStart).add(rattleDir.clone().multiplyScalar(0.09 + i * 0.095));
+      seg.lookAt(rattleStart.clone().add(rattleDir));
+      seg.rotateX(Math.PI / 2);
+      snake.add(seg);
+    }
+    this.rattle = rattleDir; // saved for idle shake
+
+    // -----------------------------------------------------------
+    // 4. Head — wedge-shaped viper skull w/ fangs + forked tongue
+    // -----------------------------------------------------------
+    const head = new THREE.Group();
+    const headPos = bodyPts[bodyPts.length - 1].clone().add(new THREE.Vector3(0.12, 0.12, 0.05));
+
+    const skull = new THREE.Mesh(
+      new THREE.SphereGeometry(0.22, 28, 20),
+      snakeMat
+    );
+    skull.scale.set(1.35, 0.75, 0.95);
+    head.add(skull);
+
+    // brow ridge — darker scaled top
+    const brow = new THREE.Mesh(
+      new THREE.SphereGeometry(0.22, 24, 16),
+      snakeScaleMat
+    );
+    brow.scale.set(1.32, 0.28, 0.9);
+    brow.position.set(-0.02, 0.11, 0);
+    head.add(brow);
+
+    // eyes — two small dark globes with a hint of yellow highlight
+    const eyeMat = new THREE.MeshStandardMaterial({
+      color: 0xffc64a,
+      metalness: 0.3,
+      roughness: 0.2,
+      emissive: 0x3a2a00,
+      emissiveIntensity: 0.8,
+    });
+    const pupilMat = new THREE.MeshStandardMaterial({ color: 0x070503, roughness: 0.1 });
+    const eyeGeo = new THREE.SphereGeometry(0.048, 16, 12);
+    const pupilGeo = new THREE.SphereGeometry(0.028, 12, 10);
+    [[-0.02, 0.05, 0.15], [-0.02, 0.05, -0.15]].forEach((p) => {
+      const e = new THREE.Mesh(eyeGeo, eyeMat);
+      e.position.set(...p);
+      head.add(e);
+      const pupil = new THREE.Mesh(pupilGeo, pupilMat);
+      pupil.position.set(p[0] + 0.018, p[1], p[2] * 0.9);
+      head.add(pupil);
+    });
+
+    // nostrils
+    [[0.22, -0.02, 0.06], [0.22, -0.02, -0.06]].forEach((p) => {
+      const n = new THREE.Mesh(new THREE.SphereGeometry(0.012, 8, 6), pupilMat);
+      n.position.set(...p);
+      head.add(n);
+    });
+
+    // jaw — lower half, slightly agape
+    const jaw = new THREE.Mesh(new THREE.SphereGeometry(0.19, 24, 18), snakeMat);
+    jaw.scale.set(1.25, 0.35, 0.85);
+    jaw.position.set(0.02, -0.10, 0);
+    head.add(jaw);
+
+    // fangs — two small curved cones
+    const fangMat = new THREE.MeshStandardMaterial({
+      color: 0xfff3b0,
+      metalness: 0.2,
+      roughness: 0.2,
+    });
+    [[0.14, -0.09, 0.07], [0.14, -0.09, -0.07]].forEach((p) => {
+      const fang = new THREE.Mesh(new THREE.ConeGeometry(0.018, 0.12, 10), fangMat);
+      fang.position.set(...p);
+      fang.rotation.x = Math.PI;
+      fang.rotation.z = 0.15;
+      head.add(fang);
+    });
+
+    // forked tongue — two thin ribbons
+    const tongueMat = new THREE.MeshStandardMaterial({
+      color: 0x801616,
+      metalness: 0.1,
+      roughness: 0.4,
+      emissive: 0x220404,
+    });
+    const tongueBase = new THREE.Mesh(new THREE.CylinderGeometry(0.015, 0.008, 0.22, 10), tongueMat);
+    tongueBase.rotation.z = -Math.PI / 2;
+    tongueBase.position.set(0.32, -0.05, 0);
+    head.add(tongueBase);
+    [0.05, -0.05].forEach((zoff) => {
+      const tip = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.003, 0.11, 10), tongueMat);
+      tip.rotation.z = -Math.PI / 2;
+      tip.rotation.y = zoff > 0 ? -0.5 : 0.5;
+      tip.position.set(0.48, -0.05, zoff);
+      head.add(tip);
+    });
+
+    head.position.copy(headPos);
+    // orient head to look slightly away from coin
+    head.rotation.y = -0.25;
+    head.rotation.z = 0.32;
+    this.snakeHead = head;
+    snake.add(head);
+
+    this.snake = snake;
+    this.goat.add(snake);
+
+    // place emblem — angled so the front face catches the key light
+    this.goat.position.set(0, 0, 0);
+    this.goat.rotation.y = -0.2;
+    this.goat.rotation.x = 0.05;
     this.scene.add(this.goat);
+
+    // cache materials so we can fade them as the emblem drifts to bg
+    this._emblemMaterials = [
+      goldMat, goldHighMat, goldDarkMat,
+      snakeMat, snakeScaleMat, eyeMat, tongueMat,
+    ];
+    this._emblemMaterials.forEach((m) => { m.transparent = true; });
   }
 
   _buildParticles() {
@@ -504,35 +606,41 @@ export class CryptoScene {
     this.shimmer.position.z = Math.sin(t * 0.7) * 3 + 1;
     this.shimmer.position.y = 1.5 + Math.sin(t * 1.3) * 0.4;
 
-    // flag: idle drift + scroll-driven tilt
+    const s = this.scrollT;
+    // how "backgrounded" the emblem is: 0 = hero centerpiece, 1 = deep bg
+    const bg = Math.min(1, Math.max(0, (s - 0.05) / 0.45));
+    const bgEase = bg * bg * (3 - 2 * bg);
+
+    // emblem: idle drift + scroll-driven slide into background
     if (this.goat) {
-      this.goat.position.y = -0.1 + Math.sin(t * 0.8) * 0.05;
-      const yawTarget = -0.25 + this.mouse.x * 0.35 + this.scrollT * Math.PI * 0.8;
-      const pitchTarget = this.mouse.y * 0.15 + Math.sin(t * 0.4) * 0.03;
+      this.goat.position.y = 0 + Math.sin(t * 0.6) * 0.08 - bgEase * 0.6;
+      this.goat.position.x = -bgEase * 1.1;
+      this.goat.position.z = -bgEase * 4.5;
+      // slow continuous rotation, with mouse parallax on top
+      const yawTarget = -0.2 + this.mouse.x * 0.25 + s * Math.PI * 0.8 + t * 0.06;
+      const pitchTarget = 0.05 + this.mouse.y * 0.14 + Math.sin(t * 0.35) * 0.03;
       this.goat.rotation.y += (yawTarget - this.goat.rotation.y) * 0.04;
       this.goat.rotation.x += (pitchTarget - this.goat.rotation.x) * 0.04;
-    }
+      const scale = 1 - bgEase * 0.55;
+      this.goat.scale.setScalar(scale);
 
-    // waving flag cloth simulation
-    if (this.flag) {
-      const geo = this.flag.geometry;
-      const pos = geo.attributes.position;
-      const base = geo.userData.basePos;
-      const halfW = (geo.parameters?.width || 4.8) / 2;
-      for (let i = 0; i < pos.count; i++) {
-        const ix = i * 3;
-        const x = base[ix];
-        const y = base[ix + 1];
-        // anchor strength: 0 at left pole, 1 at free edge
-        const anchor = (x + halfW) / (halfW * 2);
-        const wave =
-          Math.sin(x * 1.8 - t * 2.6) * 0.09 +
-          Math.sin(y * 2.2 + t * 1.7) * 0.04 +
-          Math.sin(x * 3.2 + y * 1.1 + t * 3.1) * 0.03;
-        pos.array[ix + 2] = wave * anchor;
+      // fade emblem materials as it backgrounds (never fully gone)
+      if (this._emblemMaterials) {
+        const op = 1 - bgEase * 0.55;
+        this._emblemMaterials.forEach((m) => { m.opacity = op; });
       }
-      pos.needsUpdate = true;
-      geo.computeVertexNormals();
+
+      // pendant / accent rings keep spinning
+      if (this.pendant) {
+        this.pendant.rotation.z += dt * 0.9;
+        this.pendant.rotation.y += dt * 0.4;
+      }
+
+      // snake head sway + tongue flicker via head scale pulse
+      if (this.snakeHead) {
+        this.snakeHead.rotation.z = 0.32 + Math.sin(t * 1.1) * 0.06;
+        this.snakeHead.rotation.y = -0.25 + Math.sin(t * 0.7) * 0.08;
+      }
     }
 
     // rings counter-rotate
@@ -544,18 +652,14 @@ export class CryptoScene {
       });
     }
 
-    // scroll-driven camera path
-    // Fly around the goat across the scroll, drift in for the buy scene
-    const s = this.scrollT;
-    const camRadius = 6.4 - Math.min(s, 0.85) * 1.6;
-    const camAngle = s * Math.PI * 0.6;
-    const targetX = Math.sin(camAngle) * camRadius * 0.25;
-    const targetZ = camRadius;
-    const targetY = 0.4 + Math.sin(s * Math.PI) * 0.5;
+    // camera stays mostly parked; subtle dolly on deep scroll
+    const targetX = this.mouse.x * 0.15;
+    const targetY = 0.2 + this.mouse.y * 0.15 - bgEase * 0.3;
+    const targetZ = 6.4 + bgEase * 0.6;
     this.camera.position.x += (targetX - this.camera.position.x) * 0.04;
-    this.camera.position.z += (targetZ - this.camera.position.z) * 0.04;
     this.camera.position.y += (targetY - this.camera.position.y) * 0.04;
-    this.camera.lookAt(0, 0, 0);
+    this.camera.position.z += (targetZ - this.camera.position.z) * 0.04;
+    this.camera.lookAt(-bgEase * 0.6, -bgEase * 0.3, 0);
 
     // grid only fades in mid-scroll
     if (this.grid) {
