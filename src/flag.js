@@ -36,7 +36,7 @@ export class FlagBackground {
       uTex: { value: tex },
       uWind: { value: 1.0 },
       uScrim: { value: new THREE.Color(0x0a0805) },
-      uScrimAmount: { value: 0.42 },
+      uScrimAmount: { value: 0.18 }, // lighter so flag colors show
     };
 
     const geo = new THREE.PlaneGeometry(16, 9, 160, 90);
@@ -144,12 +144,23 @@ export class FlagBackground {
   setSceneIndex() {}
 
   _animate = () => {
-    this.uniforms.uTime.value = this.clock.getElapsedTime();
-    // subtle camera breathing for depth
-    const t = this.uniforms.uTime.value;
-    this.camera.position.x = Math.sin(t * 0.12) * 0.15;
-    this.camera.position.y = Math.cos(t * 0.09) * 0.1;
+    const t = this.clock.getElapsedTime();
+    this.uniforms.uTime.value = t;
+
+    // Slow 3D rotation: full Y-axis spin every ~24s, with a gentle
+    // X-axis tilt + Z roll so it feels like a flag flying in space
+    // rather than just a wall poster.
+    if (this.plane) {
+      this.plane.rotation.y = Math.sin(t * 0.22) * 0.55; // sweep left/right
+      this.plane.rotation.x = Math.sin(t * 0.18) * 0.18; // pitch
+      this.plane.rotation.z = Math.sin(t * 0.13) * 0.08; // roll
+    }
+
+    // Camera breathing — subtle parallax on top of the rotation.
+    this.camera.position.x = Math.sin(t * 0.12) * 0.18;
+    this.camera.position.y = Math.cos(t * 0.09) * 0.12;
     this.camera.lookAt(0, 0, 0);
+
     this.renderer.render(this.scene, this.camera);
     requestAnimationFrame(this._animate);
   };

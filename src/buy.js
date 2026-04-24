@@ -14,7 +14,6 @@ export function initBuy() {
   const amtFiat     = document.getElementById("amt-fiat");
   const quoteFiat   = document.getElementById("quote-fiat");
   const emailInput  = document.getElementById("buy-email");
-  const connectBtn  = document.getElementById("connect-wallet");
   const payBtn      = document.getElementById("pay-card");
   const payAmountEl = document.getElementById("pay-amount");
   const walletStatus = document.getElementById("wallet-status");
@@ -27,6 +26,49 @@ export function initBuy() {
     animateNumber("stat-holders", holders, (v) => Math.round(v).toLocaleString());
     animateNumber("stat-tracks", tracks, (v) => Math.round(v).toLocaleString());
   };
+
+  // ---- Live price binding ----
+  // DexScreener pushes the latest $CR USD price via the cr-live event in
+  // src/main.js, which calls this setter. Same hook is exposed for ETH.
+  window.__updateLivePrice = (priceUsd) => {
+    if (typeof priceUsd === "number" && priceUsd > 0) {
+      TOKEN_PRICE_USD = priceUsd;
+      paintLivePrice();
+      recalc();
+      stripeState.needsNewIntent = true;
+    }
+  };
+  window.__updateEthPrice = (eth) => {
+    if (typeof eth === "number" && eth > 0) {
+      ETH_USD = eth;
+      paintLivePrice();
+      recalc();
+    }
+  };
+
+  // Optional live price chip in the buy card. Render only if container
+  // exists; otherwise we just update the quote math silently.
+  function paintLivePrice() {
+    const el = document.getElementById("live-price");
+    if (!el) return;
+    const fmt = TOKEN_PRICE_USD < 0.01
+      ? "$" + TOKEN_PRICE_USD.toFixed(6)
+      : "$" + TOKEN_PRICE_USD.toFixed(4);
+    el.innerHTML = `<span class="lp-dot"></span> Live $CR ${fmt} · ETH $${Math.round(ETH_USD).toLocaleString()}`;
+  }
+  paintLivePrice();
+
+  // Refresh ETH from Yahoo proxy every 60s so quote math stays current.
+  async function refreshEth() {
+    try {
+      const r = await fetch("/api/yahoo?symbols=ETH-USD", { cache: "no-store" });
+      const j = await r.json();
+      const px = j?.quotes?.[0]?.price;
+      if (typeof px === "number" && px > 0) window.__updateEthPrice(px);
+    } catch {}
+  }
+  refreshEth();
+  setInterval(refreshEth, 60_000);
 
   // ---- Quote math ----
   function fmtUsd(v) { return "$" + (+v || 0).toFixed(2); }
@@ -48,38 +90,114 @@ export function initBuy() {
   });
   recalc();
 
-  // ---- Wallet connect ----
-  connectBtn.addEventListener("click", async () => {
-    walletStatus.textContent = "Requesting wallet…";
-    try {
-      if (window.ethereum && window.ethereum.request) {
-        const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
-        const a = accounts?.[0];
-        if (a) {
-          walletStatus.textContent = `Connected · ${a.slice(0, 6)}…${a.slice(-4)}`;
-          connectBtn.textContent = "Buy with ETH";
-          connectBtn.onclick = () => {
-            walletStatus.textContent = "Submitting tx (demo)… ✓ pending";
-            setTimeout(() => {
-              walletStatus.textContent = `✓ Bought ${(+amtCrypto.value).toLocaleString()} $CR — tx 0x${Math.random().toString(16).slice(2, 10)}…`;
-            }, 1400);
-          };
-          return;
-        }
-      }
-      await new Promise((r) => setTimeout(r, 700));
-      const fake = "0x" + Math.random().toString(16).slice(2, 10) + "…" + Math.random().toString(16).slice(2, 6);
-      walletStatus.textContent = `Demo wallet connected · ${fake}`;
-      connectBtn.textContent = "Buy with demo wallet";
-      connectBtn.onclick = () => {
-        walletStatus.textContent = "Submitting tx (demo)…";
-        setTimeout(() => {
-          walletStatus.textContent = `✓ Bought ${(+amtCrypto.value).toLocaleString()} $CR on testnet`;
-        }, 1100);
-      };
-    } catch (e) {
-      walletStatus.textContent = "Wallet request rejected.";
+  // ---- Wallet connect (MetaMask / WalletConnect / Phantom / Solflare) ----
+  const chainTabs = document.querySelectorAll(".chain-tab");
+  const walletEth = document.getElementById("wallet-eth");
+  const walletSol = document.getElementById("wallet-sol");
+  chainTabs.forEach((t) => {
+    t.addEventListener("click", () => {
+      chainTabs.forEach((b) => { b.classList.remove("is-active"); b.setAttribute("aria-selected", "false"); });
+      t.classList.add("is-active");
+      t.setAttribute("aria-selected", "true");
+      const c = t.dataset.chain;
+      walletEth.classList.toggle("is-hidden", c !== "eth");
+      walletSol.classList.toggle("is-hidden", c !== "sol");
+    });
+  });
+
+  // Label each wallet button with installed/not installed detection.
+  function markInstalled() {
+    const has = {
+      metamask: !!(window.ethereum && (window.ethereum.isMetaMask || (window.ethereum.providers || []).some((p) => p.isMetaMask))),
+      walletconnect: true, // always usable via deep link / QR
+      phantom: !!(window.phantom?.solana?.isPhantom || window.solana?.isPhantom),
+      solflare: !!(window.solflare?.isSolflare),
+    };
+    document.querySelectorAll(".wallet-btn[data-wallet]").forEach((btn) => {
+      const id = btn.dataset.wallet;
+      const sub = btn.querySelector("[data-sub]");
+      if (!sub || sub.textContent.trim()) return; // respect preset sub-labels
+      sub.textContent = has[id] ? "Detected" : "Not installed";
+    });
+  }
+  markInstalled();
+
+  function shortAddr(a) { return a.slice(0, 6) + "…" + a.slice(-4); }
+  function setStatus(msg, state = "") {
+    walletStatus.textContent = msg;
+    walletStatus.dataset.state = state;
+  }
+
+  async function connectMetaMask() {
+    const eth = window.ethereum;
+    if (!eth) {
+      window.open("https://metamask.io/download/", "_blank", "noopener");
+      setStatus("MetaMask not detected — install it, then try again.", "warn");
+      return;
     }
+    const provider = (eth.providers || []).find((p) => p.isMetaMask) || eth;
+    const accounts = await provider.request({ method: "eth_requestAccounts" });
+    const a = accounts?.[0];
+    if (!a) throw new Error("No account returned");
+    setStatus(`MetaMask connected · ${shortAddr(a)}`, "ok");
+    return { chain: "eth", address: a, provider };
+  }
+
+  async function connectWalletConnect() {
+    // WalletConnect v2 requires a Project ID. Until that's configured we
+    // surface a clear message instead of pretending to connect.
+    setStatus("WalletConnect coming soon — use MetaMask or mobile browser.", "warn");
+    return null;
+  }
+
+  async function connectPhantom() {
+    const sol = window.phantom?.solana || (window.solana?.isPhantom ? window.solana : null);
+    if (!sol) {
+      window.open("https://phantom.app/", "_blank", "noopener");
+      setStatus("Phantom not detected — install it, then try again.", "warn");
+      return;
+    }
+    const resp = await sol.connect();
+    const a = resp.publicKey.toString();
+    setStatus(`Phantom connected · ${shortAddr(a)}`, "ok");
+    return { chain: "sol", address: a, provider: sol };
+  }
+
+  async function connectSolflare() {
+    const sf = window.solflare;
+    if (!sf) {
+      window.open("https://solflare.com/", "_blank", "noopener");
+      setStatus("Solflare not detected — install it, then try again.", "warn");
+      return;
+    }
+    await sf.connect();
+    const a = sf.publicKey?.toString();
+    if (!a) throw new Error("Solflare did not return a key");
+    setStatus(`Solflare connected · ${shortAddr(a)}`, "ok");
+    return { chain: "sol", address: a, provider: sf };
+  }
+
+  const CONNECTORS = {
+    metamask: connectMetaMask,
+    walletconnect: connectWalletConnect,
+    phantom: connectPhantom,
+    solflare: connectSolflare,
+  };
+
+  document.querySelectorAll(".wallet-btn[data-wallet]").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      const id = btn.dataset.wallet;
+      setStatus(`Requesting ${id}…`);
+      try {
+        const conn = await CONNECTORS[id]();
+        if (!conn) return;
+        btn.classList.add("is-connected");
+        btn.querySelector(".w-name").textContent = `${id[0].toUpperCase() + id.slice(1)} · ${shortAddr(conn.address)}`;
+      } catch (e) {
+        console.error(e);
+        setStatus(e?.message || "Wallet request rejected.", "err");
+      }
+    });
   });
 
   // ---- Stripe Payment Element ----

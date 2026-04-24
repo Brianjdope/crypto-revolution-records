@@ -88,20 +88,58 @@
       <section id="buy" class="buy" data-scene="buy">
         <p class="section-eyebrow">Buy $CR / Join the herd</p>
         <h2>Claim your <span class="gold">piece of the revolution.</span></h2>
+        <div id="live-price" class="live-price"><span class="lp-dot"></span> Live $CR — · ETH —</div>
 
         <div class="buy-grid">
           <div class="buy-card" id="buy-wallet">
             <header>
-              <h3>Connect wallet</h3>
+              <h3>Pay in crypto</h3>
               <span class="chip">Web3</span>
             </header>
-            <p>MetaMask, Phantom, WalletConnect. Pay in ETH, SOL, or USDC.</p>
+            <p>Send ETH or SOL direct from your wallet. Tokens airdrop to the sending address.</p>
             <div class="amount">
               <label for="amt-crypto">Amount ($CR)</label>
-              <input id="amt-crypto" type="number" min="100" step="100" value="10000" />
-              <span class="quote" id="quote-crypto">≈ — ETH</span>
+              <input id="amt-crypto" type="number" min="100" step="100" placeholder="0" />
+              <span class="quote" id="quote-crypto">≈ —</span>
             </div>
-            <button class="btn btn-primary" id="connect-wallet">Connect wallet</button>
+
+            <div class="chain-tabs" role="tablist" aria-label="Blockchain">
+              <button type="button" class="chain-tab is-active" data-chain="eth" role="tab" aria-selected="true">Ethereum</button>
+              <button type="button" class="chain-tab" data-chain="sol" role="tab" aria-selected="false">Solana</button>
+            </div>
+
+            <div class="wallet-grid" id="wallet-eth" role="tabpanel">
+              <button type="button" class="wallet-btn" data-wallet="metamask">
+                <span class="w-logo" aria-hidden="true">🦊</span>
+                <span class="w-name">MetaMask</span>
+                <span class="w-sub" data-sub></span>
+              </button>
+              <button type="button" class="wallet-btn" data-wallet="walletconnect">
+                <span class="w-logo" aria-hidden="true">🔗</span>
+                <span class="w-name">WalletConnect</span>
+                <span class="w-sub" data-sub>Mobile / any wallet</span>
+              </button>
+            </div>
+
+            <div class="wallet-grid is-hidden" id="wallet-sol" role="tabpanel">
+              <button type="button" class="wallet-btn" data-wallet="phantom">
+                <span class="w-logo" aria-hidden="true">👻</span>
+                <span class="w-name">Phantom</span>
+                <span class="w-sub" data-sub></span>
+              </button>
+              <button type="button" class="wallet-btn" data-wallet="solflare">
+                <span class="w-logo" aria-hidden="true">🔥</span>
+                <span class="w-name">Solflare</span>
+                <span class="w-sub" data-sub></span>
+              </button>
+            </div>
+
+            <p class="wallet-nowallet">
+              Don't have a wallet? Create one:
+              <a href="https://metamask.io/download/" target="_blank" rel="noopener">MetaMask</a> ·
+              <a href="https://phantom.app/" target="_blank" rel="noopener">Phantom</a> ·
+              <a href="https://solflare.com/" target="_blank" rel="noopener">Solflare</a>
+            </p>
             <small id="wallet-status" class="status"></small>
           </div>
 
@@ -113,7 +151,7 @@
             <p>Credit or debit card. Tokens delivered to the email below.</p>
             <div class="amount">
               <label for="amt-fiat">Amount (USD)</label>
-              <input id="amt-fiat" type="number" min="10" step="10" value="250" />
+              <input id="amt-fiat" type="number" min="10" step="10" placeholder="0" />
               <span class="quote" id="quote-fiat">= — $CR</span>
             </div>
             <div class="amount">
@@ -125,7 +163,7 @@
             </div>
             <div class="pay-row">
               <button class="btn btn-primary btn-xl" id="pay-card" type="button">
-                Pay <span id="pay-amount">$250.00</span>
+                Pay <span id="pay-amount">$0.00</span>
               </button>
             </div>
             <small id="card-status" class="status"></small>
@@ -143,8 +181,8 @@
       <section id="mission" class="mission" data-scene="mission">
         <p class="section-eyebrow">Manifesto</p>
         <h2 class="reveal">
-          This isn't just a record label.
-          <span class="gold">This is a revolution.</span>
+          This isn't just a Record Label.
+          <span class="gold">This is a Revolution.</span>
         </h2>
         <div class="mission-copy">
           <p class="mission-lead">
@@ -209,13 +247,13 @@
         <p class="section-eyebrow">Listen / Trending on Audius</p>
         <h2>The sound of the revolution.</h2>
         <p class="section-lede section-lede-lg">
-          Tracks stream live from <a href="https://audius.co/trending?timeRange=week" target="_blank" rel="noopener noreferrer" class="gold">Audius trending (week)</a>.
+          Tracks stream live from <a href="https://audius.co/ozthecryptogoat" target="_blank" rel="noopener noreferrer" class="gold">OZ The Crypto Goat on Audius</a>.
           Purchase the RWA token through Audius.
         </p>
         <div class="audius-embed">
           <iframe
-            src="https://audius.co/trending?timeRange=week"
-            title="Audius trending this week"
+            src="https://audius.co/ozthecryptogoat"
+            title="OZ The Crypto Goat on Audius"
             loading="lazy"
             referrerpolicy="no-referrer"
             allow="autoplay; encrypted-media"

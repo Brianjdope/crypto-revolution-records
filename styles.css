@@ -71,6 +71,13 @@ html.pager-mode main > footer {
   width: 100%;
   height: 100vh;
   overflow-y: auto;
+  /* Center panel content vertically + horizontally by default. */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 120px 32px 120px;
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
@@ -79,7 +86,22 @@ html.pager-mode main > footer {
               transform 800ms cubic-bezier(.22,.7,.2,1),
               visibility 0s 650ms;
   will-change: opacity, transform;
+  /* Hide scrollbars but keep the panel scrollable. */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
+html.pager-mode main > section::-webkit-scrollbar,
+html.pager-mode main > footer::-webkit-scrollbar { width: 0; height: 0; display: none; }
+/* Center inline elements/grids inside each panel. */
+html.pager-mode main > section > *,
+html.pager-mode main > footer > * { margin-left: auto; margin-right: auto; }
+html.pager-mode .hero-actions,
+html.pager-mode .footer-links,
+html.pager-mode .socials,
+html.pager-mode .footer-bottom { justify-content: center; }
+/* Global: hide page scrollbar everywhere. */
+html, body { scrollbar-width: none; -ms-overflow-style: none; }
+html::-webkit-scrollbar, body::-webkit-scrollbar { width: 0; height: 0; display: none; }
 html.pager-mode main > section.is-active,
 html.pager-mode main > footer.is-active {
   opacity: 1;
@@ -188,7 +210,7 @@ body::after {
   content: "";
   position: fixed;
   inset: 0;
-  background: linear-gradient(180deg, rgba(10,8,5,0.25) 0%, rgba(10,8,5,0.5) 100%);
+  background: linear-gradient(180deg, rgba(10,8,5,0.08) 0%, rgba(10,8,5,0.22) 100%);
   z-index: 0;
   pointer-events: none;
 }
@@ -373,10 +395,18 @@ section h2 {
 .hero {
   min-height: 100vh;
   display: grid;
-  align-content: start;
-  padding-top: clamp(140px, 18vh, 220px);
+  align-content: center;
+  justify-items: center;
+  text-align: center;
+  padding-top: clamp(120px, 16vh, 180px);
   padding-bottom: 120px;
 }
+.hero .lede,
+.hero .eyebrow,
+.hero .hero-actions,
+.hero .hero-stats { margin-left: auto; margin-right: auto; }
+.hero .lede { max-width: 60ch; }
+.hero-actions { justify-content: center; }
 .eyebrow {
   display: inline-flex;
   align-items: center;
@@ -403,11 +433,13 @@ section h2 {
 .hero h1 {
   font-family: var(--serif);
   font-weight: 900;
-  font-size: clamp(72px, 14vw, 220px);
-  line-height: 0.85;
-  letter-spacing: -0.04em;
-  margin: 0 0 36px;
+  font-size: clamp(40px, 8vw, 96px);
+  line-height: 0.92;
+  letter-spacing: -0.02em;
+  margin: 0 auto 32px;
+  max-width: 12ch;
   text-transform: uppercase;
+  text-align: center;
 }
 .hero h1 .line {
   display: block;
@@ -598,8 +630,11 @@ section h2 {
 
 /* mission contact card — email + telegram rally */
 .mission-cta {
-  margin-top: 48px;
+  margin: 48px auto 0;
   display: grid;
+  justify-items: center;
+  width: 100%;
+  max-width: 720px;
 }
 .mcta-inner {
   border: 1px solid var(--line);
@@ -611,6 +646,9 @@ section h2 {
     linear-gradient(180deg, rgba(20, 16, 10, 0.7), rgba(10, 8, 5, 0.7));
   display: grid;
   gap: 14px;
+  justify-items: center;
+  text-align: center;
+  width: 100%;
 }
 .mcta-eyebrow {
   font-family: var(--mono);
@@ -621,18 +659,24 @@ section h2 {
   margin: 0;
 }
 .mcta-body {
-  margin: 0;
+  margin: 0 auto;
   font-family: var(--serif);
   font-size: clamp(20px, 1.6vw, 26px);
   line-height: 1.35;
   color: var(--ink);
   max-width: 48ch;
+  text-align: center;
 }
 .mcta-links {
   margin-top: 14px;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
   gap: 14px;
+  width: 100%;
+}
+.mcta-link {
+  min-width: 280px;
 }
 .mcta-link {
   display: grid;
@@ -1844,14 +1888,42 @@ section h2 {
 }
 .token-paragraph strong { color: var(--gold-2); font-weight: 700; }
 
+/* Live price chip in the Buy panel */
+.live-price {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: 18px auto 8px;
+  padding: 8px 16px;
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  border-radius: 999px;
+  background: rgba(10, 8, 5, 0.55);
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  color: var(--gold-2);
+  text-transform: uppercase;
+}
+.live-price .lp-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #6dd58c;
+  box-shadow: 0 0 10px #6dd58caa;
+  animation: pulse 1.6s ease-in-out infinite;
+}
+
 /* Audius embed block */
 .audius-embed {
-  margin-top: 40px;
+  margin: 40px auto 0;
+  width: 100%;
+  max-width: 1100px;
   border: 1px solid var(--line);
   border-radius: var(--radius);
   overflow: hidden;
   background: rgba(10, 8, 5, 0.6);
   box-shadow: 0 20px 60px rgba(0,0,0,.45);
+  align-self: stretch;
 }
 .audius-embed iframe {
   width: 100%;
@@ -1896,6 +1968,97 @@ main > section .section-lede {
 
 /* Hero stays left-aligned (signature block) */
 .hero { text-align: left; }
+
+/* Wallet tabs + button grid */
+.chain-tabs {
+  display: inline-flex;
+  gap: 6px;
+  padding: 4px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.35);
+  align-self: start;
+}
+.chain-tab {
+  border: 0;
+  background: transparent;
+  color: var(--ink-mute);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  padding: 8px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background .2s ease, color .2s ease;
+}
+.chain-tab:hover { color: var(--ink); }
+.chain-tab.is-active {
+  background: linear-gradient(180deg, var(--gold-1), var(--gold-3) 60%, var(--gold-4));
+  color: #0a0805;
+  font-weight: 700;
+}
+.wallet-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.wallet-grid.is-hidden { display: none; }
+.wallet-btn {
+  display: grid;
+  grid-template-columns: 32px 1fr;
+  grid-template-rows: auto auto;
+  gap: 2px 12px;
+  align-items: center;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: rgba(20, 16, 10, 0.5);
+  color: var(--ink);
+  font-family: inherit;
+  cursor: pointer;
+  transition: border-color .2s ease, background .2s ease, transform .2s ease;
+  text-align: left;
+}
+.wallet-btn:hover {
+  border-color: rgba(212, 175, 55, 0.5);
+  background: rgba(212, 175, 55, 0.08);
+  transform: translateY(-1px);
+}
+.wallet-btn.is-connected {
+  border-color: rgba(125, 217, 123, 0.5);
+  background: rgba(125, 217, 123, 0.08);
+}
+.wallet-btn .w-logo {
+  grid-row: 1 / span 2;
+  font-size: 24px;
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+}
+.wallet-btn .w-name {
+  font-family: var(--serif);
+  font-size: 16px;
+  font-weight: 700;
+}
+.wallet-btn .w-sub {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+.wallet-nowallet {
+  font-size: 12px;
+  color: var(--ink-dim);
+  margin-top: 4px;
+}
+.wallet-nowallet a { color: var(--gold-2); }
+.wallet-nowallet a:hover { text-decoration: underline; }
+@media (max-width: 560px) {
+  .wallet-grid { grid-template-columns: 1fr; }
+}
 
 /* Simplified artist cards (no NFT meta rows) */
 .artist-card .artist-meta .nm {
