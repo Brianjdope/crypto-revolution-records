@@ -5,8 +5,8 @@
 //   • Card: Stripe Payment Element with payment_method_types=["card"].
 //     Requires STRIPE_PUBLISHABLE_KEY / STRIPE_SECRET_KEY in .env.
 // ============================================================
-const TOKEN_PRICE_USD = 0.0125;
-const ETH_USD = 3284;
+let TOKEN_PRICE_USD = 0.0125;  // seeded; updated live from DexScreener
+let ETH_USD = 3284;             // seeded; updated live from Yahoo proxy
 
 export function initBuy() {
   const amtCrypto   = document.getElementById("amt-crypto");

@@ -4,12 +4,9 @@
 // in the spirit of luxury record sleeves.
 // ============================================================
 const ARTISTS = [
-  { name: "MERIDIAN",   genre: "AI Trap",        price: "0.42 ETH", hue: 44,  seed: 7  },
-  { name: "GHOST CHOIR",genre: "Synth Gospel",   price: "0.18 ETH", hue: 268, seed: 13 },
-  { name: "VAULT 808",  genre: "Crypto Drill",   price: "0.36 ETH", hue: 12,  seed: 21 },
-  { name: "AURELIA",    genre: "Holo Pop",       price: "0.55 ETH", hue: 320, seed: 5  },
-  { name: "NODE/RUNNER",genre: "AI Hyperhouse",  price: "0.21 ETH", hue: 180, seed: 33 },
-  { name: "THE PROOF",  genre: "Spoken Word",    price: "0.14 ETH", hue: 90,  seed: 41 },
+  { name: "OZ THE CRYPTO GOAT", hue: 44,  seed: 7  },
+  { name: "REVOLUTION STARTS",  hue: 12,  seed: 21 },
+  { name: "00BASETATTS",        hue: 268, seed: 13 },
 ];
 
 // Tiny seeded RNG so the art is stable across renders
@@ -109,11 +106,6 @@ export function initRoster() {
       <div class="artist-art"><canvas></canvas></div>
       <div class="artist-meta">
         <div class="nm">${a.name}</div>
-        <div class="gn">${a.genre} · NFT ${String(i + 1).padStart(3, "0")}</div>
-        <div class="row">
-          <span>1 of 100 minted</span>
-          <span class="price">${a.price}</span>
-        </div>
       </div>
     </article>
   `).join("");

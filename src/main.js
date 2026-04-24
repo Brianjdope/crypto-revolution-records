@@ -11,11 +11,9 @@
 // Regular scrolling inside a panel never advances — only overscroll
 // at the panel edge does.
 // ============================================================
-import { CryptoScene } from "./scene.js";
+import { FlagBackground } from "./flag.js";
 import { initCryptoTicker } from "./crypto.js";
-import { initTokenomics } from "./tokenomics.js";
 import { initRoster } from "./roster.js";
-import { initMusicPlayer } from "./music.js";
 import { initBuy } from "./buy.js";
 import { initExtras } from "./extras.js";
 
@@ -24,7 +22,7 @@ const loader = document.getElementById("loader");
 const loaderFill = document.getElementById("loader-fill");
 const loaderStatus = document.getElementById("loader-status");
 const loaderMessages = [
-  "minting the gold goat…",
+  "igniting the revolution…",
   "indexing the chain…",
   "tuning the studio…",
   "warming the herd…",
@@ -43,7 +41,7 @@ tickLoader();
 
 // ---------- Three.js stage ----------
 const canvas = document.getElementById("bg-canvas");
-const stage = new CryptoScene(canvas);
+const stage = new FlagBackground(canvas);
 
 // ---------- Section pager ----------
 document.documentElement.classList.add("pager-mode");
@@ -220,19 +218,33 @@ window.addEventListener("hashchange", () => {
 
 // ---------- Boot the sections ----------
 initRoster();
-initMusicPlayer();
-initTokenomics();
 initBuy();
 initExtras();
 initCryptoTicker().then(() => {
+  // First paint uses fallback numbers so nothing looks empty.
   if (window.__updateBuyStats) {
     window.__updateBuyStats(12_500_000, 4287, 168);
   }
 });
 
+// Whenever DexScreener gives us a fresh $CR read, pipe it into the hero
+// stats and anywhere else that cares.
+window.addEventListener("cr-live", (e) => {
+  const d = e.detail || {};
+  if (window.__updateBuyStats) {
+    const cap     = d.marketCap  || d.liquidity * 10 || 12_500_000;
+    const holders = d.txns24h    ? Math.max(1000, Math.round(d.txns24h * 8)) : 4287;
+    const tracks  = 168;
+    window.__updateBuyStats(cap, holders, tracks);
+  }
+  if (window.__updateLivePrice) {
+    window.__updateLivePrice(d.price);
+  }
+});
+
 // ---------- Console signature ----------
 console.log(
-  "%cCRYPTO REVOLUTION %c· OZ THE CRYPTO GOAT",
+  "%cCRYPTO REVOLUTION %c· AI MUSIC RECORD LABEL",
   "color:#f4d36b;font:700 14px serif;letter-spacing:.3em",
   "color:#b9ad8b;font:400 12px monospace;letter-spacing:.3em"
 );
