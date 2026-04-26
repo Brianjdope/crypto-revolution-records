@@ -5,8 +5,8 @@
 // ============================================================
 const ARTISTS = [
   { name: "OZ THE CRYPTO GOAT", hue: 44,  seed: 7  },
-  { name: "REVOLUTION STARTS",  hue: 12,  seed: 21 },
-  { name: "00BASETATTS",        hue: 268, seed: 13 },
+  { name: "REVOLUTION STARTS NOW",  hue: 12,  seed: 21 },
+  { name: "00TATT$",            hue: 268, seed: 13 },
 ];
 
 // Tiny seeded RNG so the art is stable across renders
